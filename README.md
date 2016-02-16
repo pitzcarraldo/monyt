@@ -1,4 +1,4 @@
-# [Monyt](http://monyt.js.org/)
+# Monyt
 
 ## Monitoring Module for Node.js Applications
 
