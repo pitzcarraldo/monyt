@@ -34,7 +34,7 @@
     "log4js"
   ],
   "scripts": {
-    "clean": "rimraf lib dist coverage",
+    "clean": "rimraf lib coverage",
     "lint": "eslint src test --fix",
     "test": "mocha",
     "coverage": "babel-node node_modules/isparta/bin/isparta cover node_modules/mocha/bin/_mocha",
