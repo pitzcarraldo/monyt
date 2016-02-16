@@ -1,4 +1,4 @@
-# Monyt
+# [Monyt](https://pitzcarraldo.github.io/monyt)
 
 ## Monitoring Module for Node.js Applications
 
@@ -115,7 +115,9 @@ Return connect/express middleware for collect request and error metrics.
 
 ### Change History
 
-[CHANGELOG](CHANGELOG.md)
+[CHANGELOG][]
+
+[CHANGELOG]: https://github.com/Pitzcarraldo/monyt/blob/master/CHANGELOG.md
 
 ### License
 

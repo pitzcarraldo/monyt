@@ -34,7 +34,7 @@
     "log4js"
   ],
   "scripts": {
-    "clean": "rimraf lib coverage",
+    "clean": "rimraf lib coverage docs",
     "lint": "eslint src test --fix",
     "test": "mocha",
     "coverage": "babel-node node_modules/isparta/bin/isparta cover node_modules/mocha/bin/_mocha",
@@ -44,7 +44,10 @@
     "preversion": "npm run clean && npm run check",
     "version": "npm run build",
     "postversion": "git push && git push --tags && npm run clean",
-    "prepublish": "npm run clean && npm run build"
+    "prepublish": "npm run clean && npm run build",
+    "docs:clean": "rimraf docs",
+    "docs:build": "esdoc -c esdoc.json",
+    "docs:publish": "npm run docs:clean && npm run docs:build && cd docs && git init && git commit --allow-empty -m 'update book' && git checkout -b gh-pages && touch .nojekyll && git add . && git commit -am 'update docs' && git push https://github.com/Pitzcarraldo/monyt.git gh-pages --force"
   },
   "dependencies": {
     "babel-runtime": "^6.3.19",
@@ -70,6 +73,8 @@
     "babel-preset-stage-0": "^6.3.13",
     "chai": "^3.5.0",
     "es3ify-loader": "^0.1.0",
+    "esdoc": "^0.4.5",
+    "esdoc-es7-plugin": "0.0.3",
     "eslint": "^1.7.1",
     "eslint-config-rackt": "^1.1.1",
     "history": "^1.17.0",
