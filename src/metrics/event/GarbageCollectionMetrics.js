@@ -2,17 +2,19 @@ import gc from 'gc-stats';
 import Metrics from '../Metrics';
 
 export default class GarbageCollectionMetrics extends Metrics {
-  constructor(options = {}) {
-    super(options);
-    this.id = 'gc';
-    this.gc = (gc)();
-    this.sender = options.sender;
-    this.gc.on('stats', (stats) => {
-      this.sender.send(this.getMetrics(stats));
-    });
+  constructor() {
+    super();
+    this.name = 'gc';
+    this.listen();
   }
 
-  getMetrics(stats) {
+  listen() {
+    gc.on('stats', stats => {
+      this.value = (this.toMetrics(stats));
+    });
+  };
+
+  toMetrics(stats) {
     const metrics = {};
     const gcType = this.getGCType(stats.gctype);
     const key = this.getMetricsKey() + '.' + gcType;

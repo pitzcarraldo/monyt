@@ -12,9 +12,7 @@ export default {
         return (new Error)
           .stack
           .split('\n')[STACK_LIMIT]
-          .replace(/^\s+at\s+(\S+)\s\((.+?)([^\/]+):(\d+):\d+\)$/, function () {
-            return `${arguments[1]} ${arguments[3]}:${arguments[4]}`;
-          });
+          .split('at')[1];
       }
     }
   }
