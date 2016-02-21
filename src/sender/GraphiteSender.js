@@ -7,11 +7,13 @@ export default class GraphiteSender extends Sender {
   }
 
   send(metrics) {
-    this.client.write(metrics, error => {
-      if (error) {
-        return Promise.reject(error);
-      }
-      return Promise.resolve();
+    return new Promise((resolve, reject)=> {
+      this.client.write(metrics, error => {
+        if (error) {
+          return reject(error);
+        }
+        return resolve();
+      });
     });
   }
 }

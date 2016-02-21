@@ -13,4 +13,4 @@ export ErrorCountMetrics from './metrics/markable/ErrorCountMetrics';
 export Sender from './sender/Sender';
 export GraphiteSender from './sender/GraphiteSender';
 export appenders from './logger/appenders/index';
-export default './Monyt';
+export default from './Monyt';

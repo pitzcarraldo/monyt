@@ -9,6 +9,7 @@ export default class MarkableMetrics extends Metrics {
     if (!marker.mark) {
       throw new Error('Not Implemented: marker.mark()');
     }
+    this.marker = marker;
   }
 
   mark() {

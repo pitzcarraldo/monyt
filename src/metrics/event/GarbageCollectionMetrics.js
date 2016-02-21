@@ -4,20 +4,28 @@ import Metrics from '../Metrics';
 export default class GarbageCollectionMetrics extends Metrics {
   constructor() {
     super();
+    this.gc = (gc)();
     this.name = 'gc';
+    this.value = {};
     this.listen();
   }
 
   listen() {
-    gc.on('stats', stats => {
+    this.gc.on('stats', stats => {
       this.value = (this.toMetrics(stats));
     });
-  };
+  }
+
+  getValue() {
+    const value = { ...this.value };
+    this.value = {};
+    return value;
+  }
 
   toMetrics(stats) {
     const metrics = {};
     const gcType = this.getGCType(stats.gctype);
-    const key = this.getMetricsKey() + '.' + gcType;
+    const key = `${this.name}.${gcType}`;
     metrics[key] = stats.pauseMS;
     return metrics;
   }

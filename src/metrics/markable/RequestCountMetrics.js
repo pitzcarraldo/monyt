@@ -8,6 +8,6 @@ export default class RequestCountMetrics extends MarkableMetrics {
   }
 
   getValue() {
-    return this.marker.toJSON().currentRate;
+    return this.marker.toJSON().count;
   }
 }

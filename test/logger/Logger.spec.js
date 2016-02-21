@@ -2,25 +2,28 @@ import { expect } from 'chai';
 import { Logger } from '../../src/index';
 
 describe('Logger', () => {
-  describe('getLogger', () => {
-    it('should return logger with category name.', () => {
-      const logger = Logger.getLogger({
-        category: 'test'
-      });
-      expect(logger.category).to.be.equal('test');
+  describe('constructor', () => {
+
+    it('should throw Error when logger is empty.', () => {
+      expect(()=> {
+        new Logger();
+      }).to.throw(Error);
     });
 
-    it('should return not null when options is empty.', () => {
-      const logger = Logger.getLogger();
-      expect(logger).to.not.be.empty;
+    it('should throw Error when logger.debug is not implemented.', () => {
+      expect(()=> {
+        new Logger({ logger: {} });
+      }).to.throw(Error);
     });
-  });
 
-  describe('middleware', () => {
-    it('should return morgan instance.', () => {
-      Logger.getLogger();
-      const actual = Logger.middleware();
-      expect(actual).to.be.instanceof(Function);
+    it('should return logger instance when core logger has all mandatory properties', () => {
+      const coreLogger = [ 'trace', 'debug', 'info', 'warn', 'error', 'fatal' ].reduce((logger, level)=> {
+        logger[level] = console.log;
+        return logger;
+      }, {});
+      const logger = new Logger({ logger: coreLogger });
+      expect(logger.debug).not.to.be.empty;
     });
+
   });
 });

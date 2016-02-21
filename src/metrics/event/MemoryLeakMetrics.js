@@ -1,28 +1,36 @@
 import memwatch from 'memwatch-next';
 import heapdump from 'heapdump';
 import Metrics from '../Metrics';
+import warning from '../../warning';
 
 export default class MemoryLeakMetrics extends Metrics {
   constructor(options = {}) {
     super();
     this.name = 'memoryLeak';
+    this.value = {};
     this.autoDump = options.autoDump || false;
     this.listen();
   }
 
   listen() {
     memwatch.on('leak', stats => {
-      console.warn('Detected Memory Leaks', stats);
+      warning(`Detected Memory Leaks ${stats}`);
       this.value = stats;
       if (this.autoDump) {
         heapdump.writeSnapshot((err, filename) => {
           if (err) {
-            console.error('Heap Dump Failed', err);
+            warning(`Heap Dump Failed ${err}`);
             return;
           }
-          console.warn('Heap Dump Written To', filename);
+          warning(`Heap Dump Written To ${filename}`);
         });
       }
     });
+  }
+
+  getValue() {
+    const value = { ...this.value };
+    this.value = {};
+    return value;
   }
 }
