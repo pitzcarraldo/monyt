@@ -28,7 +28,8 @@ describe('Monyt', () => {
 
   class MockSender extends Sender {
     constructor() {
-      super({ send: spy() });
+      super();
+      this.client = { send: spy() };
     }
 
     send(metrics) {
