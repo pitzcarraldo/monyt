@@ -16,117 +16,163 @@ Monyt provides abstracted interfaces to log and monitor for Node.js Applications
 $ npm i -S monyt
 ```
 
+## Usage
+
+### Basic
+
+`monitor.js`
+
+```js
+import Monyt, {
+    RequestCountMetrics,
+    ErrorCountMetrics,
+    MemoryMetrics,
+    GarbageCollectionMetrics,
+    EventLoopLagMetrics,
+    GraphiteSender
+} from 'monyt';
+
+const interval = 60000; //default is 30000(ms)
+
+const senders = [new GraphiteSender({
+    host: 'my.graphite.host.com',
+    port: '2003' //port of plaintext protocol
+})];
+
+const metricses = [
+    new RequestCountMetrics(),
+    new ErrorCountMetrics(),
+    new MemoryMetrics(),
+    new GarbageCollectionMetrics(),
+    new EventLoopLagMetrics()
+];
+
+const monitor = new Monyt({
+    interval,
+    prefix: `${application}.${hostname}.${clusterId}`, //This could be server hostname or application name or clusterId and etc.
+    senders,
+    metricses
+});
+
+export default monitor;
+```
+
+
+`server.js`
+
+```js
+import Express from 'express';
+import monitor from './monitor';
+
+const logger = monitor.getLogger();
+
+monitor.listen(results => {
+    results
+    .then(metricses=>logger.debug(metricses))
+    .catch(error=>logger.error(error));
+});
+
+const app = new Express();
+app.use(monyt.middlewares());
+app.use('/', (req, res, next) => {
+    logger.info('This is index.');
+    res.send('hello monyt!');
+});
+```
+
+### Make your own Metrics and Sender
+
+`ProductBuyMetrics.js`
+
+```js
+import { Metrics } from 'monyt';
+
+export default class ProductBuyMetrics extends Metrics {
+    constructor() {
+        super();
+        this.name = 'user.buy';
+        this.value = {}
+    }
+
+    buy(productId) {
+        this.value[productId] = this.value[productId] || 0;
+        this.value[productId] = this.value[productId] + 1;
+    }
+}
+```
+
+
+`MongoDBSender.js`
+
+```js
+import { Sender } from 'monyt';
+
+export default class MongoDBSender extends Sender {
+    constructor(options = {}) {
+        super();
+        this.client = options.db.collection('metrics');
+    }
+
+    send(metrics) {
+     return new Promise((resolve, reject)=> {
+         this.client.insert(metrics, (error, result) => {
+         if (error) {
+           return reject(error);
+         }
+         return resolve(result);
+       });
+     });
+    }
+}
+```
+
+`monitor.js`
+
+```js
+...
+const productBuyMetrics = new ProductBuyMetrics()
+const senders = [new MongoDBSender({db: mongodbClient});]
+const metricses = [new ProductBuyMetrics()];
+const monitor = new Monyt({
+    ...
+    senders,
+    metricses,
+    ...
+});
+export default monitor;
+export productBuyMetrics;
+```
+
+`your-app.js`
+
+```js
+import { productBuyMetrics } from './monitor';
+
+app.post('/buy/:user/:productId', (req, res, next) => {
+    //...buying process...
+    productBuyMetrics.buy(req.params.productId);
+    res.send(buyResult);
+});
+```
+
 ## API
 
-### `Logger`
+[ESDoc](http://pitzcarraldo.github.io/monyt/)
 
-Logging Module like Slf4j(or Log4j) wrapping the [Log4js](https://github.com/nomiddlename/log4js-node).
-The Logger provides logger like what used in Java Application, becaus using same format with Slf4j.
-
-```js
-%-5p %d{yyyy-MM-dd hh:mm:ss} [process-%y] %x{line} - %m
-INFO  2016-01-04 13:30:21 [process-21465] Server.<anonymous> server.js:44 - production
-```
-
-#### `getLogger(options: object)`
-
-Static method that returns new or exist Logger instance.
-
-* `options`
-  * `category(string, default: 'app')`: Category of logger. Yon can categorise logger to use another configuration for each loggers.
-  * `level(string)`: Limit level to print. ALL, TRACE, DEBUG, INFO, WARN, ERROR, FATAL, MARK, OFF.
-  * `replaceConsole(boolean)`: Determine whether to replace console with logger. If this is true, you can logger with javascript console.log. Level of console.log is 'INFO'.
-
-##### Usage
-
-```js
-
-const logger = Logger.getLogger({
-  level : 'INFO',
-  replaceConsole: true
-});
-
-logger.info('info log'); // print 'info log'
-logger.debug('debug log'); // print nothing
-console.info('info log'); //print 'info log'
-console.log('info log'); //print 'info log'
-
-```
-
-#### `middleware(options: object)`
-
-Static method that returns connect/express request logging middleware.
-
-  * `options`
-    * `category(string, default: 'network')`: Same with `getLogger()`.
-    * `level(string)`: Same with `getLogger()`.
-    * `format(string`: Format to formatting logs.
-      * Format Tokens
-        * :url, :protocol, :hostname, :method, :status, :response-time, :date, :referrer, :http-version, :remote-addr, :user-agent, :content-length
-
-##### Usage
-
-```js
-
-const logger = Logger.middleware({
-  replaceConsole: true
-});
-
-logger.info('info log'); // print 'info log'
-logger.debug('debug log'); // print nothing
-console.info('info log'); //print 'info log'
-console.log('info log'); //print 'info log'
-
-```
-
-#### `addAppender(appender: object)`
-
-Static method that add log4js appender to Logger. ([Appenders](https://github.com/nomiddlename/log4js-node/wiki/Appenders))
-
-### `Monitor`
-
-This sends metrics of Node.js Application to Graphite Server.
-Monitor sends metrics like below.
-
-  * Event Log Lag
-  * Request Count
-  * Error Count
-  * Memory Usage
-    * Heap Memory Usage
-    * Total Heap Size
-    * Resident Set Size
-  * Garbase Collection Metrics
-    * Major GC Time
-    * Minor GC Time
-  * Memory Leak Statistics (Memory increase amount)
-
-#### `constructor(options: {})`
-
-  * `options`
-    * `interval(number)`: Interval for send the metrics.
-    * `graphite`
-      * `host(string)`: Graphite Server Host.
-      * `port(number)`: Graphite Server Port.
-    * `autoDump(boolean)`: Turn of Auto Dump. If this is true, invoke heap dump when application catch memory leak.
-
-#### `middleware()`
-
-Return connect/express middleware for collect request and error metrics.
-
-### Change History
+## Change History
 
 [CHANGELOG][]
 
 [CHANGELOG]: https://github.com/Pitzcarraldo/monyt/blob/master/CHANGELOG.md
 
-### License
+## License
 
 This software is free to use under the Minkyu Cho. MIT license.
 See the [LICENSE file][] for license text and copyright information.
 
 [LICENSE file]: https://github.com/Pitzcarraldo/monyt/blob/master/LICENSE
 
-### Contributing
+## Contributing
 
 **Please don't hesitate to send a small pull-request or just leave anything you want as an issue.**
 

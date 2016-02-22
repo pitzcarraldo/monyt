@@ -3,7 +3,8 @@ import graphite from 'graphite';
 
 export default class GraphiteSender extends Sender {
   constructor(options = {}) {
-    super(graphite.createClient(`plaintext://${options.host}:${options.port}/`));
+    super();
+    this.client = graphite.createClient(`plaintext://${options.host}:${options.port}/`);
   }
 
   send(metrics) {
@@ -12,7 +13,7 @@ export default class GraphiteSender extends Sender {
         if (error) {
           return reject(error);
         }
-        return resolve();
+        return resolve(metrics);
       });
     });
   }

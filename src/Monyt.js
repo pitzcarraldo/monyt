@@ -1,7 +1,6 @@
 import { DEFAULT_INTERVAL } from './constants';
 import LoggerFactory from './logger/LoggerFactory';
 import MetricsAggregator from './metrics/MetricsAggregator';
-import warning from './warning';
 
 export default class Monyt {
   /**
@@ -12,7 +11,7 @@ export default class Monyt {
    * @param {Promise} [options.listener=new Promise()] - Listener of MetricsAggregator.
    * @param {string} [options.prefix=''] - Prefix of metrics name.
    * @param {Object} [options.aggregator=new MetricsAggregator({...options, interval: this.interval})] - Instance of MetricsAggregator.
-   * @param {class} [options.logger=LoggerFactory.FACTORY] - Logger Class to use.
+   * @param {Logger} [options.logger=LoggerFactory.FACTORY] - Logger Class to use.
    * @return {Monyt} - new Monyt Instances.
    */
   constructor(options = {}) {
@@ -33,7 +32,6 @@ export default class Monyt {
     return this.aggregator.listen((metricses)=> {
       callback && callback(
         Promise.all(this.senders.map(sender => sender.send(metricses)))
-        .catch(error => warning(error))
       );
     });
   }
