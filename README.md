@@ -90,7 +90,7 @@ import { Metrics } from 'monyt';
 export default class ProductBuyMetrics extends Metrics {
     constructor() {
         super();
-        this.name = 'user.buy';
+        this.name = 'product.buy';
         this.value = {}
     }
 
