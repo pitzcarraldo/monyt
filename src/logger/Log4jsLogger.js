@@ -11,9 +11,12 @@ export default class Log4jsLogger extends Logger {
   }
 
   static getCoreLogger(options) {
-    const logger = Log4jsLogger.CORE.getLogger(options.category);
-    logger.setLevel(options.level);
-    options.replaceConsole && Log4jsLogger.CORE.replaceConsole(logger);
+    const category = options.category || 'app';
+    const level = options.level || 'info';
+    const replaceConsole = options.replaceConsole || false;
+    const logger = Log4jsLogger.CORE.getLogger(category);
+    logger.setLevel(level);
+    replaceConsole && Log4jsLogger.CORE.replaceConsole(logger);
     return logger;
   }
 
@@ -33,7 +36,7 @@ export default class Log4jsLogger extends Logger {
    * @returns {Function} connect/express middleware to logging requests.
    */
   static logMiddleware(options = {}) {
-    const logger = new Log4jsLogger({ category: options.category || 'request' });
+    const logger = Log4jsLogger.CORE.getLogger(options.category|| 'request');
     const level = options.level || 'auto';
     const format = options.format || ':method :url :status :content-length - :response-time ms';
     return Log4jsLogger.CORE.connectLogger(logger, { level, format });
@@ -51,13 +54,13 @@ export default class Log4jsLogger extends Logger {
   }
 
   /**
-   * @param {Object} [options={category: 'app', level: 'info', replaceConsole: false}] - Options to initialize logger instance.
+   * @param {Object} [options={}] - Options to initialize logger instance.
    * @param {string} [options.category=app] - Category of logger.
    * @param {string} [options.level=info] - Level to log.
    * @param {boolean} [options.replaceConsole=false] - Flag to switch replaceConsole options.
    * @returns {Log4jsLogger} - new Log4jsLogger Instance.
    */
-  constructor(options = { category: 'app', level: 'info', replaceConsole: false }) {
+  constructor(options = {}) {
     super({ logger: Log4jsLogger.getCoreLogger(options) });
   }
 }

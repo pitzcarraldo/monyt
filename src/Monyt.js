@@ -12,6 +12,7 @@ export default class Monyt {
    * @param {string} [options.prefix=''] - Prefix of metrics name.
    * @param {Object} [options.aggregator=new MetricsAggregator({...options, interval: this.interval})] - Instance of MetricsAggregator.
    * @param {Logger} [options.logger=LoggerFactory.FACTORY] - Logger Class to use.
+   * @param {boolean} [options.replaceConsole=false] - Replace Console with Logger.
    * @return {Monyt} - new Monyt Instances.
    */
   constructor(options = {}) {
@@ -19,6 +20,7 @@ export default class Monyt {
     this.senders = options.senders || [];
     this.listener = '';
     this.aggregator = options.aggregator || new MetricsAggregator({ ...options, interval: this.interval });
+    this.replaceConsole = options.replaceConsole || false;
     options.logger && LoggerFactory.setFactory(options.logger);
   }
 
@@ -29,10 +31,11 @@ export default class Monyt {
    * @returns {Number} - interval listener id.
    */
   listen(callback) {
+    this.replaceConsole && this.getLogger({ replaceConsole: this.replaceConsole });
     return this.aggregator.listen((metricses)=> {
-      callback && callback(
-        Promise.all(this.senders.map(sender => sender.send(metricses)))
-      );
+      Promise.all(this.senders.map(sender => sender.send(metricses)))
+        .then(results => callback && callback(Promise.resolve(results)))
+        .catch(error => callback && callback(Promise.reject(error)));
     });
   }
 
@@ -47,14 +50,14 @@ export default class Monyt {
   /**
    * @returns {Logger} logger - Default logger instance.
    */
-  getLogger() {
-    return LoggerFactory.getLogger();
+  getLogger(options) {
+    return LoggerFactory.getLogger(options);
   }
 
   /**
    * @returns {Array} middlewares - List of middlewares to mark and log requests and errors.
    */
   middlewares() {
-    return [ this.aggregator.markMiddleware(), LoggerFactory.logMiddleware() ];
+    return [this.aggregator.markMiddleware(), LoggerFactory.logMiddleware()];
   }
 }

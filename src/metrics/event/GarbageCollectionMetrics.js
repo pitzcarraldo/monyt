@@ -25,8 +25,7 @@ export default class GarbageCollectionMetrics extends Metrics {
   toMetrics(stats) {
     const metrics = {};
     const gcType = this.getGCType(stats.gctype);
-    const key = `${this.name}.${gcType}`;
-    metrics[key] = stats.pauseMS;
+    metrics[gcType] = stats.pauseMS;
     return metrics;
   }
 

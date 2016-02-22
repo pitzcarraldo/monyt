@@ -1,6 +1,6 @@
 # [Monyt](https://pitzcarraldo.github.io/monyt)
 
-## Monitoring Module for Node.js Applications
+## Extensible Monitor and Logger for Node.js Applications
 
 [![Build Status](https://travis-ci.org/Pitzcarraldo/monyt.svg)](https://travis-ci.org/Pitzcarraldo/monyt)
 [![Coverage Status](https://coveralls.io/repos/github/Pitzcarraldo/monyt/badge.svg?branch=master)](https://coveralls.io/github/Pitzcarraldo/monyt?branch=master)
@@ -8,7 +8,7 @@
 [![npm downloads](https://img.shields.io/npm/dm/monyt.svg?style=flat-square)](https://www.npmjs.com/package/monyt)
 [![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/Pitzcarraldo/monyt)
 
-Monyt provides abstracted interfaces to log and monitor for Node.js Applications.
+Monyt provides abstraction interfaces of monitoring and logging for Node.js Applications.
 
 ## Installation
 
