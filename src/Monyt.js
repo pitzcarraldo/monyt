@@ -48,6 +48,10 @@ export default class Monyt {
   }
 
   /**
+   * @param {Object} [options={}] - Options to initialize logger instance.
+   * @param {string} [options.category=app] - Category of logger.
+   * @param {string} [options.level=info] - Level to log.
+   * @param {boolean} [options.replaceConsole=false] - Flag to switch replaceConsole options.
    * @returns {Logger} logger - Default logger instance.
    */
   getLogger(options) {
@@ -58,6 +62,6 @@ export default class Monyt {
    * @returns {Array} middlewares - List of middlewares to mark and log requests and errors.
    */
   middlewares() {
-    return [this.aggregator.markMiddleware(), LoggerFactory.logMiddleware()];
+    return [ this.aggregator.markMiddleware(), LoggerFactory.logMiddleware() ];
   }
 }
