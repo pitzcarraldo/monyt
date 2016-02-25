@@ -7,6 +7,17 @@ chai.use(sinonChai);
 
 describe('ProcessSender', () => {
 
+  describe('sendClient', () => {
+
+    it('should called in constructor when host and port are exist', () => {
+      process.send = spy();
+      const client = { host: 'host', port: 2003 };
+      const sender = new ProcessSender(client);
+      expect(process.send).calledWithMatch({ client });
+    });
+    
+  });
+
   describe('send', () => {
 
     it('should print waning', async(done) => {
@@ -32,7 +43,7 @@ describe('ProcessSender', () => {
         };
         const result = await sender.send(metrics);
         expect(result).not.to.be.empty;
-        expect(process.send).calledWithMatch(metrics);
+        expect(process.send).calledWithMatch({ metrics });
         done();
       } catch (error) {
         done(error);
