@@ -1,0 +1,43 @@
+import chai, { expect } from 'chai';
+import { spy } from 'sinon';
+import sinonChai from 'sinon-chai'
+import { ProcessSender } from '../../src/index';
+
+chai.use(sinonChai);
+
+describe('ProcessSender', () => {
+
+  describe('send', () => {
+
+    it('should print waning', async(done) => {
+      try {
+        const sender = new ProcessSender();
+        const metrics = {
+          requestCounts: 100
+        };
+        const result = await sender.send(metrics);
+        expect(result).not.to.be.empty;
+        done();
+      } catch (error) {
+        done(error);
+      }
+    });
+
+    it('should return aggregated metricses', async(done) => {
+      try {
+        process.send = spy();
+        const sender = new ProcessSender();
+        const metrics = {
+          requestCounts: 100
+        };
+        const result = await sender.send(metrics);
+        expect(result).not.to.be.empty;
+        expect(process.send).calledWithMatch(metrics);
+        done();
+      } catch (error) {
+        done(error);
+      }
+    });
+
+  });
+});
