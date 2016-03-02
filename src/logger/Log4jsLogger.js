@@ -20,8 +20,9 @@ export default class Log4jsLogger extends Logger {
     return logger;
   }
 
-  static addAppender(appender) {
-    Log4jsLogger.CORE.addAppender(appender);
+  static addAppender({type, layout, config, category}) {
+    Log4jsLogger.CORE.loadAppender(type);
+    Log4jsLogger.CORE.addAppender(Log4jsLogger.CORE.appenders[type](layout, config), category);
   }
 
   static replaceAppender(...appenders) {

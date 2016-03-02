@@ -1,3 +1,8 @@
+## 0.2.0
+
+* Added ProcessSender
+* Fixed addAppender interface.
+
 ## 0.1.0
 
 * Refactored Logger, Metrics, Sender
