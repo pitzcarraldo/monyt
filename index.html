@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl">
+  <title data-ice="title">API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <a data-ice="repoURL" href="git+https://github.com/Pitzcarraldo/monyt.git">Repository</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/Monyt.js~Monyt.html">Monyt</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-warning">warning</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-DEFAULT_INTERVAL">DEFAULT_INTERVAL</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">logger</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/logger/Log4jsLogger.js~Log4jsLogger.html">Log4jsLogger</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/logger/Logger.js~Logger.html">Logger</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/logger/LoggerFactory.js~LoggerFactory.html">LoggerFactory</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">logger/appenders</div><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-DEFAULT_APPENDERS">DEFAULT_APPENDERS</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">metrics</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/metrics/MemoryMetrics.js~MemoryMetrics.html">MemoryMetrics</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/metrics/Metrics.js~Metrics.html">Metrics</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/metrics/MetricsAggregator.js~MetricsAggregator.html">MetricsAggregator</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">metrics/event</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/metrics/event/GarbageCollectionMetrics.js~GarbageCollectionMetrics.html">GarbageCollectionMetrics</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/metrics/event/MemoryLeakMetrics.js~MemoryLeakMetrics.html">MemoryLeakMetrics</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">metrics/interval</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/metrics/interval/EventLoopLagMetrics.js~EventLoopLagMetrics.html">EventLoopLagMetrics</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">metrics/markable</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/metrics/markable/ErrorCountMetrics.js~ErrorCountMetrics.html">ErrorCountMetrics</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/metrics/markable/MarkableMetrics.js~MarkableMetrics.html">MarkableMetrics</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/metrics/markable/RequestCountMetrics.js~RequestCountMetrics.html">RequestCountMetrics</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">sender</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/sender/GraphiteSender.js~GraphiteSender.html">GraphiteSender</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/sender/ProcessSender.js~ProcessSender.html">ProcessSender</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/sender/Sender.js~Sender.html">Sender</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><div data-ice="index" class="github-markdown"><h1 id="-monyt-https-pitzcarraldo-github-io-monyt-"><a href="https://pitzcarraldo.github.io/monyt">Monyt</a></h1>
+<h2 id="extensible-monitor-and-logger-for-node-js-applications">Extensible Monitor and Logger for Node.js Applications</h2>
+<p><a href="https://travis-ci.org/Pitzcarraldo/monyt"><img src="https://travis-ci.org/Pitzcarraldo/monyt.svg" alt="Build Status"></a>
+<a href="https://coveralls.io/github/Pitzcarraldo/monyt?branch=master"><img src="https://coveralls.io/repos/github/Pitzcarraldo/monyt/badge.svg?branch=master" alt="Coverage Status"></a>
+<a href="https://www.npmjs.com/package/monyt"><img src="https://img.shields.io/npm/v/monyt.svg?style=flat-square" alt="npm version"></a>
+<a href="https://www.npmjs.com/package/monyt"><img src="https://img.shields.io/npm/dm/monyt.svg?style=flat-square" alt="npm downloads"></a>
+<a href="https://gitter.im/Pitzcarraldo/monyt"><img src="https://badges.gitter.im/gitterHQ/gitter.png" alt="Gitter chat"></a></p>
+<p>Monyt provides abstraction interfaces of monitoring and logging for Node.js Applications.</p>
+<h2 id="installation">Installation</h2>
+<pre><code class="lang-bash"><code class="source-code prettyprint">$ npm i -S monyt</code>
+</code></pre>
+<h2 id="usage">Usage</h2>
+<h3 id="basic">Basic</h3>
+<p><code>monitor.js</code></p>
+<pre><code class="lang-js"><code class="source-code prettyprint">import Monyt, {
+    RequestCountMetrics,
+    ErrorCountMetrics,
+    MemoryMetrics,
+    GarbageCollectionMetrics,
+    EventLoopLagMetrics,
+    GraphiteSender
+} from &apos;monyt&apos;;
+
+const interval = 60000; //default is 30000(ms)
+
+const senders = [new GraphiteSender({
+    host: &apos;my.graphite.host.com&apos;,
+    port: &apos;2003&apos; //port of plaintext protocol
+})];
+
+const metricses = [
+    new RequestCountMetrics(),
+    new ErrorCountMetrics(),
+    new MemoryMetrics(),
+    new GarbageCollectionMetrics(),
+    new EventLoopLagMetrics()
+];
+
+const monitor = new Monyt({
+    interval,
+    prefix: `${application}.${hostname}.${clusterId}`, //This could be server hostname or application name or clusterId and etc.
+    senders,
+    metricses
+});
+
+export default monitor;</code>
+</code></pre>
+<p><code>server.js</code></p>
+<pre><code class="lang-js"><code class="source-code prettyprint">import Express from &apos;express&apos;;
+import monitor from &apos;./monitor&apos;;
+
+const logger = monitor.getLogger();
+
+monitor.listen(results =&gt; {
+    results
+    .then(metricses=&gt;logger.debug(metricses))
+    .catch(error=&gt;logger.error(error));
+});
+
+const app = new Express();
+app.use(monyt.middlewares());
+app.use(&apos;/&apos;, (req, res, next) =&gt; {
+    logger.info(&apos;This is index.&apos;);
+    res.send(&apos;hello monyt!&apos;);
+});</code>
+</code></pre>
+<h3 id="make-your-own-metrics-and-sender">Make your own Metrics and Sender</h3>
+<p><code>ProductBuyMetrics.js</code></p>
+<pre><code class="lang-js"><code class="source-code prettyprint">import { Metrics } from &apos;monyt&apos;;
+
+export default class ProductBuyMetrics extends Metrics {
+    constructor() {
+        super();
+        this.name = &apos;product.buy&apos;;
+        this.value = {}
+    }
+
+    buy(productId) {
+        this.value[productId] = this.value[productId] || 0;
+        this.value[productId] = this.value[productId] + 1;
+    }
+}</code>
+</code></pre>
+<p><code>MongoDBSender.js</code></p>
+<pre><code class="lang-js"><code class="source-code prettyprint">import { Sender } from &apos;monyt&apos;;
+
+export default class MongoDBSender extends Sender {
+    constructor(options = {}) {
+        super();
+        this.client = options.db.collection(&apos;metrics&apos;);
+    }
+
+    send(metrics) {
+     return new Promise((resolve, reject)=&gt; {
+         this.client.insert(metrics, (error, result) =&gt; {
+         if (error) {
+           return reject(error);
+         }
+         return resolve(result);
+       });
+     });
+    }
+}</code>
+</code></pre>
+<p><code>monitor.js</code></p>
+<pre><code class="lang-js"><code class="source-code prettyprint">...
+const productBuyMetrics = new ProductBuyMetrics()
+const senders = [new MongoDBSender({db: mongodbClient});]
+const metricses = [new ProductBuyMetrics()];
+const monitor = new Monyt({
+    ...
+    senders,
+    metricses,
+    ...
+});
+export default monitor;
+export productBuyMetrics;</code>
+</code></pre>
+<p><code>your-app.js</code></p>
+<pre><code class="lang-js"><code class="source-code prettyprint">import { productBuyMetrics } from &apos;./monitor&apos;;
+
+app.post(&apos;/buy/:user/:productId&apos;, (req, res, next) =&gt; {
+    //...buying process...
+    productBuyMetrics.buy(req.params.productId);
+    res.send(buyResult);
+});</code>
+</code></pre>
+<h2 id="api">API</h2>
+<p><a href="http://pitzcarraldo.github.io/monyt/">ESDoc</a></p>
+<h2 id="change-history">Change History</h2>
+<p><a href="https://github.com/Pitzcarraldo/monyt/blob/master/CHANGELOG.md">CHANGELOG</a></p>
+<h2 id="license">License</h2>
+<p>This software is free to use under the Minkyu Cho. MIT license.
+See the <a href="https://github.com/Pitzcarraldo/monyt/blob/master/LICENSE">LICENSE file</a> for license text and copyright information.</p>
+<h2 id="contributing">Contributing</h2>
+<p><strong>Please don&apos;t hesitate to send a small pull-request or just leave anything you want as an issue.</strong></p>
+<ol>
+<li>Fork it!</li>
+<li>Create your feature branch: <code>git checkout -b feature/my-new-feature</code></li>
+<li>Commit your changes: <code>git commit -am &apos;Add some feature&apos;</code></li>
+<li>Push to the branch: <code>git push origin feature/my-new-feature</code></li>
+<li>Submit a pull request :D</li>
+</ol>
+</div>
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.4.5)</span></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

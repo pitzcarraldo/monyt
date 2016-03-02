@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">src/metrics/MemoryMetrics.js | API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <a data-ice="repoURL" href="git+https://github.com/Pitzcarraldo/monyt.git">Repository</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/Monyt.js~Monyt.html">Monyt</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-warning">warning</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-DEFAULT_INTERVAL">DEFAULT_INTERVAL</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">logger</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/logger/Log4jsLogger.js~Log4jsLogger.html">Log4jsLogger</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/logger/Logger.js~Logger.html">Logger</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/logger/LoggerFactory.js~LoggerFactory.html">LoggerFactory</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">logger/appenders</div><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-DEFAULT_APPENDERS">DEFAULT_APPENDERS</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">metrics</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/metrics/MemoryMetrics.js~MemoryMetrics.html">MemoryMetrics</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/metrics/Metrics.js~Metrics.html">Metrics</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/metrics/MetricsAggregator.js~MetricsAggregator.html">MetricsAggregator</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">metrics/event</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/metrics/event/GarbageCollectionMetrics.js~GarbageCollectionMetrics.html">GarbageCollectionMetrics</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/metrics/event/MemoryLeakMetrics.js~MemoryLeakMetrics.html">MemoryLeakMetrics</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">metrics/interval</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/metrics/interval/EventLoopLagMetrics.js~EventLoopLagMetrics.html">EventLoopLagMetrics</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">metrics/markable</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/metrics/markable/ErrorCountMetrics.js~ErrorCountMetrics.html">ErrorCountMetrics</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/metrics/markable/MarkableMetrics.js~MarkableMetrics.html">MarkableMetrics</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/metrics/markable/RequestCountMetrics.js~RequestCountMetrics.html">RequestCountMetrics</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">sender</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/sender/GraphiteSender.js~GraphiteSender.html">GraphiteSender</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/sender/ProcessSender.js~ProcessSender.html">ProcessSender</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/sender/Sender.js~Sender.html">Sender</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/metrics/MemoryMetrics.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import Metrics from &apos;./Metrics&apos;;
+
+export default class MemoryMetrics extends Metrics {
+  constructor() {
+    super();
+    this.name = &apos;memory&apos;;
+  }
+
+  getValue() {
+    return process.memoryUsage();
+  }
+}
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.4.5)</span></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

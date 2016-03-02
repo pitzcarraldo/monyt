@@ -1,0 +1,198 @@
+{
+  "coverage": "12.35%",
+  "expectCount": 89,
+  "actualCount": 11,
+  "files": {
+    "src/logger/appenders/index.js": {
+      "expectCount": 1,
+      "actualCount": 0,
+      "undocumentLines": [
+        3
+      ]
+    },
+    "src/constants.js": {
+      "expectCount": 1,
+      "actualCount": 0,
+      "undocumentLines": [
+        1
+      ]
+    },
+    "src/metrics/markable/ErrorCountMetrics.js": {
+      "expectCount": 4,
+      "actualCount": 0,
+      "undocumentLines": [
+        4,
+        5,
+        10,
+        7
+      ]
+    },
+    "src/metrics/interval/EventLoopLagMetrics.js": {
+      "expectCount": 6,
+      "actualCount": 0,
+      "undocumentLines": [
+        5,
+        6,
+        13,
+        9,
+        10,
+        8
+      ]
+    },
+    "src/metrics/event/GarbageCollectionMetrics.js": {
+      "expectCount": 9,
+      "actualCount": 0,
+      "undocumentLines": [
+        4,
+        5,
+        7,
+        32,
+        19,
+        13,
+        8,
+        25,
+        9
+      ]
+    },
+    "src/sender/GraphiteSender.js": {
+      "expectCount": 4,
+      "actualCount": 0,
+      "undocumentLines": [
+        4,
+        7,
+        5,
+        10
+      ]
+    },
+    "src/logger/Log4jsLogger.js": {
+      "expectCount": 8,
+      "actualCount": 3,
+      "undocumentLines": [
+        5,
+        23,
+        13,
+        8,
+        28
+      ]
+    },
+    "src/logger/Logger.js": {
+      "expectCount": 2,
+      "actualCount": 1,
+      "undocumentLines": [
+        1
+      ]
+    },
+    "src/logger/LoggerFactory.js": {
+      "expectCount": 4,
+      "actualCount": 0,
+      "undocumentLines": [
+        3,
+        11,
+        15,
+        6
+      ]
+    },
+    "src/metrics/markable/MarkableMetrics.js": {
+      "expectCount": 4,
+      "actualCount": 0,
+      "undocumentLines": [
+        3,
+        4,
+        15,
+        12
+      ]
+    },
+    "src/metrics/event/MemoryLeakMetrics.js": {
+      "expectCount": 7,
+      "actualCount": 0,
+      "undocumentLines": [
+        6,
+        11,
+        7,
+        31,
+        15,
+        9,
+        10
+      ]
+    },
+    "src/metrics/MemoryMetrics.js": {
+      "expectCount": 4,
+      "actualCount": 0,
+      "undocumentLines": [
+        3,
+        4,
+        9,
+        6
+      ]
+    },
+    "src/metrics/Metrics.js": {
+      "expectCount": 3,
+      "actualCount": 0,
+      "undocumentLines": [
+        1,
+        2,
+        6
+      ]
+    },
+    "src/metrics/MetricsAggregator.js": {
+      "expectCount": 10,
+      "actualCount": 1,
+      "undocumentLines": [
+        3,
+        18,
+        14,
+        25,
+        15,
+        36,
+        13,
+        12,
+        32
+      ]
+    },
+    "src/Monyt.js": {
+      "expectCount": 11,
+      "actualCount": 5,
+      "undocumentLines": [
+        5,
+        22,
+        19,
+        21,
+        23,
+        20
+      ]
+    },
+    "src/sender/ProcessSender.js": {
+      "expectCount": 4,
+      "actualCount": 0,
+      "undocumentLines": [
+        4,
+        5,
+        29,
+        15
+      ]
+    },
+    "src/metrics/markable/RequestCountMetrics.js": {
+      "expectCount": 4,
+      "actualCount": 0,
+      "undocumentLines": [
+        4,
+        5,
+        10,
+        7
+      ]
+    },
+    "src/sender/Sender.js": {
+      "expectCount": 2,
+      "actualCount": 0,
+      "undocumentLines": [
+        1,
+        2
+      ]
+    },
+    "src/warning.js": {
+      "expectCount": 1,
+      "actualCount": 1,
+      "undocumentLines": []
+    }
+  }
+}

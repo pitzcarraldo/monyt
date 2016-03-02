@@ -1,0 +1,3462 @@
+[
+  {
+    "__docId__": 0,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/Monyt.js",
+    "memberof": null,
+    "longname": "src/Monyt.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "import { DEFAULT_INTERVAL } from './constants';\nimport LoggerFactory from './logger/LoggerFactory';\nimport MetricsAggregator from './metrics/MetricsAggregator';\n\nexport default class Monyt {\n  /**\n   * @param {Object} [options={}] - Options to initialize Monyt.\n   * @param {string} [options.interval=30000] - Interval to listen aggregate.\n   * @param {Array<Metrics>} [options.metricses=[]] - List of Metrics to aggregate.\n   * @param {Array<Sender>} [options.senders=[]] - List of sender to send metricses.\n   * @param {Promise} [options.listener=new Promise()] - Listener of MetricsAggregator.\n   * @param {string} [options.prefix=''] - Prefix of metrics name.\n   * @param {Object} [options.aggregator=new MetricsAggregator({...options, interval: this.interval})] - Instance of MetricsAggregator.\n   * @param {Logger} [options.logger=LoggerFactory.FACTORY] - Logger Class to use.\n   * @param {boolean} [options.replaceConsole=false] - Replace Console with Logger.\n   * @return {Monyt} - new Monyt Instances.\n   */\n  constructor(options = {}) {\n    this.interval = options.interval || DEFAULT_INTERVAL;\n    this.senders = options.senders || [];\n    this.listener = '';\n    this.aggregator = options.aggregator || new MetricsAggregator({ ...options, interval: this.interval });\n    this.replaceConsole = options.replaceConsole || false;\n    options.logger && LoggerFactory.setFactory(options.logger);\n  }\n\n  /**\n   * Start to aggregate and send metricses.\n   * Replace Console to default logger when replaceConsole is true.\n   * @param {Function} callback - callback function that returns result promises of senders.\n   * @returns {Number} - interval listener id.\n   */\n  listen(callback) {\n    this.replaceConsole && this.getLogger({ replaceConsole: this.replaceConsole });\n    return this.aggregator.listen((metricses)=> {\n      Promise.all(this.senders.map(sender => sender.send(metricses)))\n        .then(results => callback && callback(Promise.resolve(results)))\n        .catch(error => callback && callback(Promise.reject(error)));\n    });\n  }\n\n  /**\n   * Stop to listen.\n   * @returns {Number} - result of clearListener.\n   */\n  stop() {\n    return this.aggregator.stop();\n  }\n\n  /**\n   * @param {Object} [options={}] - Options to initialize logger instance.\n   * @param {string} [options.category=app] - Category of logger.\n   * @param {string} [options.level=info] - Level to log.\n   * @param {boolean} [options.replaceConsole=false] - Flag to switch replaceConsole options.\n   * @returns {Logger} logger - Default logger instance.\n   */\n  getLogger(options) {\n    return LoggerFactory.getLogger(options);\n  }\n\n  /**\n   * @returns {Array} middlewares - List of middlewares to mark and log requests and errors.\n   */\n  middlewares() {\n    return [ this.aggregator.markMiddleware(), LoggerFactory.logMiddleware() ];\n  }\n}\n"
+  },
+  {
+    "__docId__": 1,
+    "kind": "class",
+    "static": true,
+    "variation": null,
+    "name": "Monyt",
+    "memberof": "src/Monyt.js",
+    "longname": "src/Monyt.js~Monyt",
+    "access": null,
+    "export": true,
+    "importPath": "monyt/src/Monyt.js",
+    "importStyle": "Monyt",
+    "description": null,
+    "lineNumber": 5,
+    "undocument": true,
+    "interface": false
+  },
+  {
+    "__docId__": 2,
+    "kind": "constructor",
+    "static": false,
+    "variation": null,
+    "name": "constructor",
+    "memberof": "src/Monyt.js~Monyt",
+    "longname": "src/Monyt.js~Monyt#constructor",
+    "access": null,
+    "description": "",
+    "lineNumber": 18,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": "{}",
+        "defaultRaw": {},
+        "name": "options",
+        "description": "Options to initialize Monyt."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": "30000",
+        "defaultRaw": 30000,
+        "name": "options.interval",
+        "description": "Interval to listen aggregate."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Array<Metrics>"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": "[]",
+        "defaultRaw": [],
+        "name": "options.metricses",
+        "description": "List of Metrics to aggregate."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Array<Sender>"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": "[]",
+        "defaultRaw": [],
+        "name": "options.senders",
+        "description": "List of sender to send metricses."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Promise"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": "new",
+        "defaultRaw": "new",
+        "name": "options.listener",
+        "description": "Promise()] - Listener of MetricsAggregator."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": "''",
+        "defaultRaw": "''",
+        "name": "options.prefix",
+        "description": "Prefix of metrics name."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": "new",
+        "defaultRaw": "new",
+        "name": "options.aggregator",
+        "description": "MetricsAggregator({...options, interval: this.interval})] - Instance of MetricsAggregator."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Logger"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": "LoggerFactory.FACTORY",
+        "defaultRaw": "LoggerFactory.FACTORY",
+        "name": "options.logger",
+        "description": "Logger Class to use."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "boolean"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": "false",
+        "defaultRaw": false,
+        "name": "options.replaceConsole",
+        "description": "Replace Console with Logger."
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Monyt"
+      ],
+      "spread": false,
+      "description": "new Monyt Instances."
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 3,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "interval",
+    "memberof": "src/Monyt.js~Monyt",
+    "longname": "src/Monyt.js~Monyt#interval",
+    "access": null,
+    "description": null,
+    "lineNumber": 19,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 4,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "senders",
+    "memberof": "src/Monyt.js~Monyt",
+    "longname": "src/Monyt.js~Monyt#senders",
+    "access": null,
+    "description": null,
+    "lineNumber": 20,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 5,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "listener",
+    "memberof": "src/Monyt.js~Monyt",
+    "longname": "src/Monyt.js~Monyt#listener",
+    "access": null,
+    "description": null,
+    "lineNumber": 21,
+    "undocument": true,
+    "type": {
+      "types": [
+        "string"
+      ]
+    }
+  },
+  {
+    "__docId__": 6,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "aggregator",
+    "memberof": "src/Monyt.js~Monyt",
+    "longname": "src/Monyt.js~Monyt#aggregator",
+    "access": null,
+    "description": null,
+    "lineNumber": 22,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 7,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "replaceConsole",
+    "memberof": "src/Monyt.js~Monyt",
+    "longname": "src/Monyt.js~Monyt#replaceConsole",
+    "access": null,
+    "description": null,
+    "lineNumber": 23,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 8,
+    "kind": "method",
+    "static": false,
+    "variation": null,
+    "name": "listen",
+    "memberof": "src/Monyt.js~Monyt",
+    "longname": "src/Monyt.js~Monyt#listen",
+    "access": null,
+    "description": "Start to aggregate and send metricses.\nReplace Console to default logger when replaceConsole is true.",
+    "lineNumber": 33,
+    "unknown": [
+      {
+        "tagName": "@returns",
+        "tagValue": "{Number} - interval listener id."
+      }
+    ],
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Function"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "callback",
+        "description": "callback function that returns result promises of senders."
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Number"
+      ],
+      "spread": false,
+      "description": "interval listener id."
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 9,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "replaceConsole",
+    "memberof": "src/Monyt.js~Monyt",
+    "longname": "src/Monyt.js~Monyt#replaceConsole",
+    "access": null,
+    "description": null,
+    "lineNumber": 34,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 10,
+    "kind": "method",
+    "static": false,
+    "variation": null,
+    "name": "stop",
+    "memberof": "src/Monyt.js~Monyt",
+    "longname": "src/Monyt.js~Monyt#stop",
+    "access": null,
+    "description": "Stop to listen.",
+    "lineNumber": 46,
+    "unknown": [
+      {
+        "tagName": "@returns",
+        "tagValue": "{Number} - result of clearListener."
+      }
+    ],
+    "params": [],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Number"
+      ],
+      "spread": false,
+      "description": "result of clearListener."
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 11,
+    "kind": "method",
+    "static": false,
+    "variation": null,
+    "name": "getLogger",
+    "memberof": "src/Monyt.js~Monyt",
+    "longname": "src/Monyt.js~Monyt#getLogger",
+    "access": null,
+    "description": "",
+    "lineNumber": 57,
+    "unknown": [
+      {
+        "tagName": "@returns",
+        "tagValue": "{Logger} logger - Default logger instance."
+      }
+    ],
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": "{}",
+        "defaultRaw": {},
+        "name": "options",
+        "description": "Options to initialize logger instance."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": "app",
+        "defaultRaw": "app",
+        "name": "options.category",
+        "description": "Category of logger."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": "info",
+        "defaultRaw": "info",
+        "name": "options.level",
+        "description": "Level to log."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "boolean"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": "false",
+        "defaultRaw": false,
+        "name": "options.replaceConsole",
+        "description": "Flag to switch replaceConsole options."
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Logger"
+      ],
+      "spread": false,
+      "description": "logger - Default logger instance."
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 12,
+    "kind": "method",
+    "static": false,
+    "variation": null,
+    "name": "middlewares",
+    "memberof": "src/Monyt.js~Monyt",
+    "longname": "src/Monyt.js~Monyt#middlewares",
+    "access": null,
+    "description": "",
+    "lineNumber": 64,
+    "unknown": [
+      {
+        "tagName": "@returns",
+        "tagValue": "{Array} middlewares - List of middlewares to mark and log requests and errors."
+      }
+    ],
+    "params": [],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Array"
+      ],
+      "spread": false,
+      "description": "middlewares - List of middlewares to mark and log requests and errors."
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 13,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/constants.js",
+    "memberof": null,
+    "longname": "src/constants.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "export const DEFAULT_INTERVAL = 30 * 1000;\n"
+  },
+  {
+    "__docId__": 14,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "DEFAULT_INTERVAL",
+    "memberof": "src/constants.js",
+    "longname": "src/constants.js~DEFAULT_INTERVAL",
+    "access": null,
+    "export": true,
+    "importPath": "monyt/src/constants.js",
+    "importStyle": "{DEFAULT_INTERVAL}",
+    "description": null,
+    "lineNumber": 1,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 15,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/index.js",
+    "memberof": null,
+    "longname": "src/index.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "export Logger from './logger/Logger';\nexport Log4jsLogger from './logger/Log4jsLogger';\nexport LoggerFactory from './logger/LoggerFactory';\nexport Metrics from './metrics/Metrics';\nexport MetricsAggregator from './metrics/MetricsAggregator';\nexport MemoryMetrics from './metrics/MemoryMetrics';\nexport GarbageCollectionMetrics from './metrics/event/GarbageCollectionMetrics';\nexport MemoryLeakMetrics from './metrics/event/MemoryLeakMetrics';\nexport EventLoopLagMetrics from './metrics/interval/EventLoopLagMetrics';\nexport MarkableMetrics from './metrics/markable/MarkableMetrics';\nexport RequestCountMetrics from './metrics/markable/RequestCountMetrics';\nexport ErrorCountMetrics from './metrics/markable/ErrorCountMetrics';\nexport Sender from './sender/Sender';\nexport GraphiteSender from './sender/GraphiteSender';\nexport ProcessSender from './sender/ProcessSender';\nexport appenders from './logger/appenders/index';\nexport default from './Monyt';\n"
+  },
+  {
+    "__docId__": 16,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/logger/Log4jsLogger.js",
+    "memberof": null,
+    "longname": "src/logger/Log4jsLogger.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "import log4js from 'log4js';\nimport Logger from './Logger';\nimport { DEFAULT_APPENDERS } from './appenders/index';\n\nexport default class Log4jsLogger extends Logger {\n  static CORE = Log4jsLogger.initCore();\n\n  static initCore() {\n    log4js.configure({ appenders: DEFAULT_APPENDERS });\n    return log4js;\n  }\n\n  static getCoreLogger(options) {\n    const category = options.category || 'app';\n    const level = options.level || 'info';\n    const replaceConsole = options.replaceConsole || false;\n    const logger = Log4jsLogger.CORE.getLogger(category);\n    logger.setLevel(level);\n    replaceConsole && Log4jsLogger.CORE.replaceConsole(logger);\n    return logger;\n  }\n\n  static addAppender({ type, layout, config, category }) {\n    Log4jsLogger.CORE.loadAppender(type);\n    Log4jsLogger.CORE.addAppender(Log4jsLogger.CORE.appenders[type](layout, config), category);\n  }\n\n  static replaceAppender(...appenders) {\n    Log4jsLogger.CORE.configure({ appenders: [ ...appenders ] });\n  }\n\n  /**\n   * @param {Object} [options={}] - Options to setup logMiddleware().\n   * @param {string} [options.category=request] - Category name of request logger.\n   * @param {string} [options.category=auto] - Level to log.\n   * @param {string} [options.format=:method :url :status :content-length - :response-time ms] - Log format of request logger.\n   * @returns {Function} connect/express middleware to logging requests.\n   */\n  static logMiddleware(options = {}) {\n    const logger = Log4jsLogger.CORE.getLogger(options.category|| 'request');\n    const level = options.level || 'auto';\n    const format = options.format || ':method :url :status :content-length - :response-time ms';\n    return Log4jsLogger.CORE.connectLogger(logger, { level, format });\n  }\n\n  /**\n   * @param {Object} [options={category: 'app', level: 'info', replaceConsole: false}] - Options to initialize logger instance.\n   * @param {string} [options.category=app] - Category of logger.\n   * @param {string} [options.level=info] - Level to log.\n   * @param {boolean} [options.replaceConsole=false] - Flag to switch replaceConsole options.\n   * @returns {Log4jsLogger} - new Log4jsLogger Instance.\n   */\n  static getLogger(options) {\n    return new Log4jsLogger(options);\n  }\n\n  /**\n   * @param {Object} [options={}] - Options to initialize logger instance.\n   * @param {string} [options.category=app] - Category of logger.\n   * @param {string} [options.level=info] - Level to log.\n   * @param {boolean} [options.replaceConsole=false] - Flag to switch replaceConsole options.\n   * @returns {Log4jsLogger} - new Log4jsLogger Instance.\n   */\n  constructor(options = {}) {\n    super({ logger: Log4jsLogger.getCoreLogger(options) });\n  }\n}\n"
+  },
+  {
+    "__docId__": 17,
+    "kind": "class",
+    "static": true,
+    "variation": null,
+    "name": "Log4jsLogger",
+    "memberof": "src/logger/Log4jsLogger.js",
+    "longname": "src/logger/Log4jsLogger.js~Log4jsLogger",
+    "access": null,
+    "export": true,
+    "importPath": "monyt/src/logger/Log4jsLogger.js",
+    "importStyle": "Log4jsLogger",
+    "description": null,
+    "lineNumber": 5,
+    "undocument": true,
+    "interface": false,
+    "extends": [
+      "src/logger/Logger.js~Logger"
+    ]
+  },
+  {
+    "__docId__": 18,
+    "kind": "method",
+    "static": true,
+    "variation": null,
+    "name": "initCore",
+    "memberof": "src/logger/Log4jsLogger.js~Log4jsLogger",
+    "longname": "src/logger/Log4jsLogger.js~Log4jsLogger.initCore",
+    "access": null,
+    "description": null,
+    "lineNumber": 8,
+    "undocument": true,
+    "params": [],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 19,
+    "kind": "method",
+    "static": true,
+    "variation": null,
+    "name": "getCoreLogger",
+    "memberof": "src/logger/Log4jsLogger.js~Log4jsLogger",
+    "longname": "src/logger/Log4jsLogger.js~Log4jsLogger.getCoreLogger",
+    "access": null,
+    "description": null,
+    "lineNumber": 13,
+    "undocument": true,
+    "params": [
+      {
+        "name": "options",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 20,
+    "kind": "method",
+    "static": true,
+    "variation": null,
+    "name": "addAppender",
+    "memberof": "src/logger/Log4jsLogger.js~Log4jsLogger",
+    "longname": "src/logger/Log4jsLogger.js~Log4jsLogger.addAppender",
+    "access": null,
+    "description": null,
+    "lineNumber": 23,
+    "undocument": true,
+    "params": [
+      {
+        "name": "objectPattern",
+        "types": [
+          "{\"type\": *, \"layout\": *, \"config\": *, \"category\": *}"
+        ],
+        "defaultRaw": {
+          "type": null,
+          "layout": null,
+          "config": null,
+          "category": null
+        },
+        "defaultValue": "{\"type\":null,\"layout\":null,\"config\":null,\"category\":null}"
+      }
+    ],
+    "generator": false
+  },
+  {
+    "__docId__": 21,
+    "kind": "method",
+    "static": true,
+    "variation": null,
+    "name": "replaceAppender",
+    "memberof": "src/logger/Log4jsLogger.js~Log4jsLogger",
+    "longname": "src/logger/Log4jsLogger.js~Log4jsLogger.replaceAppender",
+    "access": null,
+    "description": null,
+    "lineNumber": 28,
+    "undocument": true,
+    "params": [
+      {
+        "name": "appenders",
+        "types": [
+          "...*"
+        ],
+        "spread": true
+      }
+    ],
+    "generator": false
+  },
+  {
+    "__docId__": 22,
+    "kind": "method",
+    "static": true,
+    "variation": null,
+    "name": "logMiddleware",
+    "memberof": "src/logger/Log4jsLogger.js~Log4jsLogger",
+    "longname": "src/logger/Log4jsLogger.js~Log4jsLogger.logMiddleware",
+    "access": null,
+    "description": "",
+    "lineNumber": 39,
+    "unknown": [
+      {
+        "tagName": "@returns",
+        "tagValue": "{Function} connect/express middleware to logging requests."
+      }
+    ],
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": "{}",
+        "defaultRaw": {},
+        "name": "options",
+        "description": "Options to setup logMiddleware()."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": "request",
+        "defaultRaw": "request",
+        "name": "options.category",
+        "description": "Category name of request logger."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": "auto",
+        "defaultRaw": "auto",
+        "name": "options.category",
+        "description": "Level to log."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": ":method",
+        "defaultRaw": ":method",
+        "name": "options.format",
+        "description": ":url :status :content-length - :response-time ms] - Log format of request logger."
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Function"
+      ],
+      "spread": false,
+      "description": "connect/express middleware to logging requests."
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 23,
+    "kind": "method",
+    "static": true,
+    "variation": null,
+    "name": "getLogger",
+    "memberof": "src/logger/Log4jsLogger.js~Log4jsLogger",
+    "longname": "src/logger/Log4jsLogger.js~Log4jsLogger.getLogger",
+    "access": null,
+    "description": "",
+    "lineNumber": 53,
+    "unknown": [
+      {
+        "tagName": "@returns",
+        "tagValue": "{Log4jsLogger} - new Log4jsLogger Instance."
+      }
+    ],
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": "{category:",
+        "defaultRaw": "{category:",
+        "name": "options",
+        "description": "'app', level: 'info', replaceConsole: false}] - Options to initialize logger instance."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": "app",
+        "defaultRaw": "app",
+        "name": "options.category",
+        "description": "Category of logger."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": "info",
+        "defaultRaw": "info",
+        "name": "options.level",
+        "description": "Level to log."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "boolean"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": "false",
+        "defaultRaw": false,
+        "name": "options.replaceConsole",
+        "description": "Flag to switch replaceConsole options."
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Log4jsLogger"
+      ],
+      "spread": false,
+      "description": "new Log4jsLogger Instance."
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 24,
+    "kind": "constructor",
+    "static": false,
+    "variation": null,
+    "name": "constructor",
+    "memberof": "src/logger/Log4jsLogger.js~Log4jsLogger",
+    "longname": "src/logger/Log4jsLogger.js~Log4jsLogger#constructor",
+    "access": null,
+    "description": "",
+    "lineNumber": 64,
+    "unknown": [
+      {
+        "tagName": "@returns",
+        "tagValue": "{Log4jsLogger} - new Log4jsLogger Instance."
+      }
+    ],
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": "{}",
+        "defaultRaw": {},
+        "name": "options",
+        "description": "Options to initialize logger instance."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": "app",
+        "defaultRaw": "app",
+        "name": "options.category",
+        "description": "Category of logger."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": "info",
+        "defaultRaw": "info",
+        "name": "options.level",
+        "description": "Level to log."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "boolean"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": "false",
+        "defaultRaw": false,
+        "name": "options.replaceConsole",
+        "description": "Flag to switch replaceConsole options."
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Log4jsLogger"
+      ],
+      "spread": false,
+      "description": "new Log4jsLogger Instance."
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 25,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/logger/Logger.js",
+    "memberof": null,
+    "longname": "src/logger/Logger.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "export default class Logger {\n  /**\n   * @param {Object} options - Options to construct Logger instance.\n   * @param {Object} options.logger - Core logger to initialize Logger.\n   * @param {Function} options.logger.trace - log method for trace level.\n   * @param {Function} options.logger.debug - log method for debug level.\n   * @param {Function} options.logger.info - log method for info level.\n   * @param {Function} options.logger.warn - log method for warn level.\n   * @param {Function} options.logger.error - log method for error level.\n   * @param {Function} options.logger.fatal - log method for fatal level.\n   * @returns {Logger} - new Logger Instance.\n   */\n  constructor(options = {}) {\n    const { logger } = options;\n    if (!logger) {\n      throw new Error('Initialize Error. logger is empty.');\n    }\n    [ 'trace', 'debug', 'info', 'warn', 'error', 'fatal' ].reduce((self, level) => {\n      if (!logger[level]) {\n        throw new Error(`Not Implemented : logger.${level}()`);\n      }\n      self[level] = (...logs) => logger[level](...logs);\n      return self;\n    }, this);\n  }\n}\n"
+  },
+  {
+    "__docId__": 26,
+    "kind": "class",
+    "static": true,
+    "variation": null,
+    "name": "Logger",
+    "memberof": "src/logger/Logger.js",
+    "longname": "src/logger/Logger.js~Logger",
+    "access": null,
+    "export": true,
+    "importPath": "monyt/src/logger/Logger.js",
+    "importStyle": "Logger",
+    "description": null,
+    "lineNumber": 1,
+    "undocument": true,
+    "interface": false
+  },
+  {
+    "__docId__": 27,
+    "kind": "constructor",
+    "static": false,
+    "variation": null,
+    "name": "constructor",
+    "memberof": "src/logger/Logger.js~Logger",
+    "longname": "src/logger/Logger.js~Logger#constructor",
+    "access": null,
+    "description": "",
+    "lineNumber": 13,
+    "unknown": [
+      {
+        "tagName": "@returns",
+        "tagValue": "{Logger} - new Logger Instance."
+      }
+    ],
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "options",
+        "description": "Options to construct Logger instance."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "options.logger",
+        "description": "Core logger to initialize Logger."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Function"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "options.logger.trace",
+        "description": "log method for trace level."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Function"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "options.logger.debug",
+        "description": "log method for debug level."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Function"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "options.logger.info",
+        "description": "log method for info level."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Function"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "options.logger.warn",
+        "description": "log method for warn level."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Function"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "options.logger.error",
+        "description": "log method for error level."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Function"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "options.logger.fatal",
+        "description": "log method for fatal level."
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Logger"
+      ],
+      "spread": false,
+      "description": "new Logger Instance."
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 28,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/logger/LoggerFactory.js",
+    "memberof": null,
+    "longname": "src/logger/LoggerFactory.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "import Log4jsLogger from './Log4jsLogger';\n\nexport default class LoggerFactory {\n  static FACTORY = Log4jsLogger;\n\n  static setFactory(cLogger) {\n    LoggerFactory.FACTORY = cLogger;\n    return LoggerFactory.FACTORY;\n  }\n\n  static getLogger(options) {\n    return LoggerFactory.FACTORY.getLogger(options);\n  }\n\n  static logMiddleware(options) {\n    return LoggerFactory.FACTORY.logMiddleware(options);\n  }\n}\n"
+  },
+  {
+    "__docId__": 29,
+    "kind": "class",
+    "static": true,
+    "variation": null,
+    "name": "LoggerFactory",
+    "memberof": "src/logger/LoggerFactory.js",
+    "longname": "src/logger/LoggerFactory.js~LoggerFactory",
+    "access": null,
+    "export": true,
+    "importPath": "monyt/src/logger/LoggerFactory.js",
+    "importStyle": "LoggerFactory",
+    "description": null,
+    "lineNumber": 3,
+    "undocument": true,
+    "interface": false
+  },
+  {
+    "__docId__": 30,
+    "kind": "method",
+    "static": true,
+    "variation": null,
+    "name": "setFactory",
+    "memberof": "src/logger/LoggerFactory.js~LoggerFactory",
+    "longname": "src/logger/LoggerFactory.js~LoggerFactory.setFactory",
+    "access": null,
+    "description": null,
+    "lineNumber": 6,
+    "undocument": true,
+    "params": [
+      {
+        "name": "cLogger",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 31,
+    "kind": "method",
+    "static": true,
+    "variation": null,
+    "name": "getLogger",
+    "memberof": "src/logger/LoggerFactory.js~LoggerFactory",
+    "longname": "src/logger/LoggerFactory.js~LoggerFactory.getLogger",
+    "access": null,
+    "description": null,
+    "lineNumber": 11,
+    "undocument": true,
+    "params": [
+      {
+        "name": "options",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 32,
+    "kind": "method",
+    "static": true,
+    "variation": null,
+    "name": "logMiddleware",
+    "memberof": "src/logger/LoggerFactory.js~LoggerFactory",
+    "longname": "src/logger/LoggerFactory.js~LoggerFactory.logMiddleware",
+    "access": null,
+    "description": null,
+    "lineNumber": 15,
+    "undocument": true,
+    "params": [
+      {
+        "name": "options",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 33,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/logger/appenders/appAppender.js",
+    "memberof": null,
+    "longname": "src/logger/appenders/appAppender.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "const STACK_LIMIT = 11;\nError.stackTraceLimit = STACK_LIMIT;\n\nexport default {\n  type: 'console',\n  category: 'app',\n  layout: {\n    type: 'pattern',\n    pattern: '%-5p %d{yyyy-MM-dd hh:mm:ss} [process-%y] %x{line} - %m',\n    tokens: {\n      line: function () {\n        return (new Error)\n          .stack\n          .split('\\n')[STACK_LIMIT]\n          .split('at')[1];\n      }\n    }\n  }\n};\n\n"
+  },
+  {
+    "__docId__": 34,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "STACK_LIMIT",
+    "memberof": "src/logger/appenders/appAppender.js",
+    "longname": "src/logger/appenders/appAppender.js~STACK_LIMIT",
+    "access": null,
+    "export": false,
+    "importPath": "monyt/src/logger/appenders/appAppender.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 1,
+    "undocument": true,
+    "type": {
+      "types": [
+        "number"
+      ]
+    }
+  },
+  {
+    "__docId__": 35,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/logger/appenders/index.js",
+    "memberof": null,
+    "longname": "src/logger/appenders/index.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "import appAppender from './appAppender';\nimport requestAppender from './requestAppender';\nconst DEFAULT_APPENDERS = [ appAppender, requestAppender ];\nexport { appAppender, requestAppender, DEFAULT_APPENDERS };\n"
+  },
+  {
+    "__docId__": 36,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "DEFAULT_APPENDERS",
+    "memberof": "src/logger/appenders/index.js",
+    "longname": "src/logger/appenders/index.js~DEFAULT_APPENDERS",
+    "access": null,
+    "export": true,
+    "importPath": "monyt/src/logger/appenders/index.js",
+    "importStyle": "{DEFAULT_APPENDERS}",
+    "description": null,
+    "lineNumber": 3,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 37,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/logger/appenders/requestAppender.js",
+    "memberof": null,
+    "longname": "src/logger/appenders/requestAppender.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "export default {\n  type: 'console',\n  category: 'request',\n  layout: {\n    type: 'pattern',\n    pattern: '%-5p %d{yyyy-MM-dd hh:mm:ss} [process-%y] %m'\n  }\n};\n"
+  },
+  {
+    "__docId__": 38,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/metrics/MemoryMetrics.js",
+    "memberof": null,
+    "longname": "src/metrics/MemoryMetrics.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "import Metrics from './Metrics';\n\nexport default class MemoryMetrics extends Metrics {\n  constructor() {\n    super();\n    this.name = 'memory';\n  }\n\n  getValue() {\n    return process.memoryUsage();\n  }\n}\n"
+  },
+  {
+    "__docId__": 39,
+    "kind": "class",
+    "static": true,
+    "variation": null,
+    "name": "MemoryMetrics",
+    "memberof": "src/metrics/MemoryMetrics.js",
+    "longname": "src/metrics/MemoryMetrics.js~MemoryMetrics",
+    "access": null,
+    "export": true,
+    "importPath": "monyt/src/metrics/MemoryMetrics.js",
+    "importStyle": "MemoryMetrics",
+    "description": null,
+    "lineNumber": 3,
+    "undocument": true,
+    "interface": false,
+    "extends": [
+      "src/metrics/Metrics.js~Metrics"
+    ]
+  },
+  {
+    "__docId__": 40,
+    "kind": "constructor",
+    "static": false,
+    "variation": null,
+    "name": "constructor",
+    "memberof": "src/metrics/MemoryMetrics.js~MemoryMetrics",
+    "longname": "src/metrics/MemoryMetrics.js~MemoryMetrics#constructor",
+    "access": null,
+    "description": null,
+    "lineNumber": 4,
+    "undocument": true,
+    "params": [],
+    "generator": false
+  },
+  {
+    "__docId__": 41,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "name",
+    "memberof": "src/metrics/MemoryMetrics.js~MemoryMetrics",
+    "longname": "src/metrics/MemoryMetrics.js~MemoryMetrics#name",
+    "access": null,
+    "description": null,
+    "lineNumber": 6,
+    "undocument": true,
+    "type": {
+      "types": [
+        "string"
+      ]
+    }
+  },
+  {
+    "__docId__": 42,
+    "kind": "method",
+    "static": false,
+    "variation": null,
+    "name": "getValue",
+    "memberof": "src/metrics/MemoryMetrics.js~MemoryMetrics",
+    "longname": "src/metrics/MemoryMetrics.js~MemoryMetrics#getValue",
+    "access": null,
+    "description": null,
+    "lineNumber": 9,
+    "undocument": true,
+    "params": [],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 43,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/metrics/Metrics.js",
+    "memberof": null,
+    "longname": "src/metrics/Metrics.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "export default class Metrics {\n  getName() {\n    return this.name;\n  }\n\n  getValue() {\n    return this.value;\n  }\n}\n"
+  },
+  {
+    "__docId__": 44,
+    "kind": "class",
+    "static": true,
+    "variation": null,
+    "name": "Metrics",
+    "memberof": "src/metrics/Metrics.js",
+    "longname": "src/metrics/Metrics.js~Metrics",
+    "access": null,
+    "export": true,
+    "importPath": "monyt/src/metrics/Metrics.js",
+    "importStyle": "Metrics",
+    "description": null,
+    "lineNumber": 1,
+    "undocument": true,
+    "interface": false
+  },
+  {
+    "__docId__": 45,
+    "kind": "method",
+    "static": false,
+    "variation": null,
+    "name": "getName",
+    "memberof": "src/metrics/Metrics.js~Metrics",
+    "longname": "src/metrics/Metrics.js~Metrics#getName",
+    "access": null,
+    "description": null,
+    "lineNumber": 2,
+    "undocument": true,
+    "params": [],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 46,
+    "kind": "method",
+    "static": false,
+    "variation": null,
+    "name": "getValue",
+    "memberof": "src/metrics/Metrics.js~Metrics",
+    "longname": "src/metrics/Metrics.js~Metrics#getValue",
+    "access": null,
+    "description": null,
+    "lineNumber": 6,
+    "undocument": true,
+    "params": [],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 47,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/metrics/MetricsAggregator.js",
+    "memberof": null,
+    "longname": "src/metrics/MetricsAggregator.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "import { DEFAULT_INTERVAL } from '../constants';\n\nexport default class MetricsAggregator {\n  /**\n   * @param {Object} [options={}] - Options to initialize MetricsAggregator.\n   * @param {string} [options.prefix=''] - Prefix of metrics name.\n   * @param {Array} [options.metricses=[]] - Metricses to aggregate.\n   * @param {number} [options.interval=30000] - Interval to aggregate.\n   * @returns {MetricsAggregator} - new MetricsAggregator Instance.\n   */\n  constructor(options = {}) {\n    this.prefix = options.prefix || '';\n    this.metricses = options.metricses || [];\n    this.interval = options.interval || DEFAULT_INTERVAL;\n    this.listener = '';\n  }\n\n  aggregate() {\n    return this.metricses.reduce((metricses, metrics) => {\n      metricses[this.prefix + metrics.getName()] = metrics.getValue();\n      return metricses;\n    },{});\n  }\n\n  listen(callback) {\n    this.listener = setInterval(()=>{\n      callback && callback(this.aggregate());\n    }, this.interval);\n    return this.listener;\n  }\n\n  stop() {\n    return clearInterval(this.listener);\n  }\n\n  markMiddleware() {\n    const requestMarker = this.metricses.find(metrics => metrics.name === 'requestCount');\n    const errorMarker = this.metricses.find(metrics => metrics.name === 'errorCount');\n    return (req, res, next) => {\n      requestMarker && requestMarker.mark && requestMarker.mark();\n      if (res.statusCode >= 400) {\n        errorMarker && errorMarker.mark && errorMarker.mark();\n      }\n      next();\n    };\n  }\n}\n"
+  },
+  {
+    "__docId__": 48,
+    "kind": "class",
+    "static": true,
+    "variation": null,
+    "name": "MetricsAggregator",
+    "memberof": "src/metrics/MetricsAggregator.js",
+    "longname": "src/metrics/MetricsAggregator.js~MetricsAggregator",
+    "access": null,
+    "export": true,
+    "importPath": "monyt/src/metrics/MetricsAggregator.js",
+    "importStyle": "MetricsAggregator",
+    "description": null,
+    "lineNumber": 3,
+    "undocument": true,
+    "interface": false
+  },
+  {
+    "__docId__": 49,
+    "kind": "constructor",
+    "static": false,
+    "variation": null,
+    "name": "constructor",
+    "memberof": "src/metrics/MetricsAggregator.js~MetricsAggregator",
+    "longname": "src/metrics/MetricsAggregator.js~MetricsAggregator#constructor",
+    "access": null,
+    "description": "",
+    "lineNumber": 11,
+    "unknown": [
+      {
+        "tagName": "@returns",
+        "tagValue": "{MetricsAggregator} - new MetricsAggregator Instance."
+      }
+    ],
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": "{}",
+        "defaultRaw": {},
+        "name": "options",
+        "description": "Options to initialize MetricsAggregator."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": "''",
+        "defaultRaw": "''",
+        "name": "options.prefix",
+        "description": "Prefix of metrics name."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Array"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": "[]",
+        "defaultRaw": [],
+        "name": "options.metricses",
+        "description": "Metricses to aggregate."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": "30000",
+        "defaultRaw": 30000,
+        "name": "options.interval",
+        "description": "Interval to aggregate."
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "MetricsAggregator"
+      ],
+      "spread": false,
+      "description": "new MetricsAggregator Instance."
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 50,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "prefix",
+    "memberof": "src/metrics/MetricsAggregator.js~MetricsAggregator",
+    "longname": "src/metrics/MetricsAggregator.js~MetricsAggregator#prefix",
+    "access": null,
+    "description": null,
+    "lineNumber": 12,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 51,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "metricses",
+    "memberof": "src/metrics/MetricsAggregator.js~MetricsAggregator",
+    "longname": "src/metrics/MetricsAggregator.js~MetricsAggregator#metricses",
+    "access": null,
+    "description": null,
+    "lineNumber": 13,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 52,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "interval",
+    "memberof": "src/metrics/MetricsAggregator.js~MetricsAggregator",
+    "longname": "src/metrics/MetricsAggregator.js~MetricsAggregator#interval",
+    "access": null,
+    "description": null,
+    "lineNumber": 14,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 53,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "listener",
+    "memberof": "src/metrics/MetricsAggregator.js~MetricsAggregator",
+    "longname": "src/metrics/MetricsAggregator.js~MetricsAggregator#listener",
+    "access": null,
+    "description": null,
+    "lineNumber": 15,
+    "undocument": true,
+    "type": {
+      "types": [
+        "string"
+      ]
+    }
+  },
+  {
+    "__docId__": 54,
+    "kind": "method",
+    "static": false,
+    "variation": null,
+    "name": "aggregate",
+    "memberof": "src/metrics/MetricsAggregator.js~MetricsAggregator",
+    "longname": "src/metrics/MetricsAggregator.js~MetricsAggregator#aggregate",
+    "access": null,
+    "description": null,
+    "lineNumber": 18,
+    "undocument": true,
+    "params": [],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 55,
+    "kind": "method",
+    "static": false,
+    "variation": null,
+    "name": "listen",
+    "memberof": "src/metrics/MetricsAggregator.js~MetricsAggregator",
+    "longname": "src/metrics/MetricsAggregator.js~MetricsAggregator#listen",
+    "access": null,
+    "description": null,
+    "lineNumber": 25,
+    "undocument": true,
+    "params": [
+      {
+        "name": "callback",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 56,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "listener",
+    "memberof": "src/metrics/MetricsAggregator.js~MetricsAggregator",
+    "longname": "src/metrics/MetricsAggregator.js~MetricsAggregator#listener",
+    "access": null,
+    "description": null,
+    "lineNumber": 26,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 57,
+    "kind": "method",
+    "static": false,
+    "variation": null,
+    "name": "stop",
+    "memberof": "src/metrics/MetricsAggregator.js~MetricsAggregator",
+    "longname": "src/metrics/MetricsAggregator.js~MetricsAggregator#stop",
+    "access": null,
+    "description": null,
+    "lineNumber": 32,
+    "undocument": true,
+    "params": [],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 58,
+    "kind": "method",
+    "static": false,
+    "variation": null,
+    "name": "markMiddleware",
+    "memberof": "src/metrics/MetricsAggregator.js~MetricsAggregator",
+    "longname": "src/metrics/MetricsAggregator.js~MetricsAggregator#markMiddleware",
+    "access": null,
+    "description": null,
+    "lineNumber": 36,
+    "undocument": true,
+    "params": [],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 59,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/metrics/event/GarbageCollectionMetrics.js",
+    "memberof": null,
+    "longname": "src/metrics/event/GarbageCollectionMetrics.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "import gc from 'gc-stats';\nimport Metrics from '../Metrics';\n\nexport default class GarbageCollectionMetrics extends Metrics {\n  constructor() {\n    super();\n    this.gc = (gc)();\n    this.name = 'gc';\n    this.value = {};\n    this.listen();\n  }\n\n  listen() {\n    this.gc.on('stats', stats => {\n      this.value = (this.toMetrics(stats));\n    });\n  }\n\n  getValue() {\n    const value = { ...this.value };\n    this.value = {};\n    return value;\n  }\n\n  toMetrics(stats) {\n    const metrics = {};\n    const gcType = this.getGCType(stats.gctype);\n    metrics[gcType] = stats.pauseMS;\n    return metrics;\n  }\n\n  getGCType(type) {\n    switch (type) {\n      case 1 :\n        return 'minor';\n      case 2 :\n      case 3 :\n        return 'major';\n      default :\n        return '';\n    }\n  }\n}\n"
+  },
+  {
+    "__docId__": 60,
+    "kind": "class",
+    "static": true,
+    "variation": null,
+    "name": "GarbageCollectionMetrics",
+    "memberof": "src/metrics/event/GarbageCollectionMetrics.js",
+    "longname": "src/metrics/event/GarbageCollectionMetrics.js~GarbageCollectionMetrics",
+    "access": null,
+    "export": true,
+    "importPath": "monyt/src/metrics/event/GarbageCollectionMetrics.js",
+    "importStyle": "GarbageCollectionMetrics",
+    "description": null,
+    "lineNumber": 4,
+    "undocument": true,
+    "interface": false,
+    "extends": [
+      "src/metrics/Metrics.js~Metrics"
+    ]
+  },
+  {
+    "__docId__": 61,
+    "kind": "constructor",
+    "static": false,
+    "variation": null,
+    "name": "constructor",
+    "memberof": "src/metrics/event/GarbageCollectionMetrics.js~GarbageCollectionMetrics",
+    "longname": "src/metrics/event/GarbageCollectionMetrics.js~GarbageCollectionMetrics#constructor",
+    "access": null,
+    "description": null,
+    "lineNumber": 5,
+    "undocument": true,
+    "params": [],
+    "generator": false
+  },
+  {
+    "__docId__": 62,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "gc",
+    "memberof": "src/metrics/event/GarbageCollectionMetrics.js~GarbageCollectionMetrics",
+    "longname": "src/metrics/event/GarbageCollectionMetrics.js~GarbageCollectionMetrics#gc",
+    "access": null,
+    "description": null,
+    "lineNumber": 7,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 63,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "name",
+    "memberof": "src/metrics/event/GarbageCollectionMetrics.js~GarbageCollectionMetrics",
+    "longname": "src/metrics/event/GarbageCollectionMetrics.js~GarbageCollectionMetrics#name",
+    "access": null,
+    "description": null,
+    "lineNumber": 8,
+    "undocument": true,
+    "type": {
+      "types": [
+        "string"
+      ]
+    }
+  },
+  {
+    "__docId__": 64,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "value",
+    "memberof": "src/metrics/event/GarbageCollectionMetrics.js~GarbageCollectionMetrics",
+    "longname": "src/metrics/event/GarbageCollectionMetrics.js~GarbageCollectionMetrics#value",
+    "access": null,
+    "description": null,
+    "lineNumber": 9,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 65,
+    "kind": "method",
+    "static": false,
+    "variation": null,
+    "name": "listen",
+    "memberof": "src/metrics/event/GarbageCollectionMetrics.js~GarbageCollectionMetrics",
+    "longname": "src/metrics/event/GarbageCollectionMetrics.js~GarbageCollectionMetrics#listen",
+    "access": null,
+    "description": null,
+    "lineNumber": 13,
+    "undocument": true,
+    "params": [],
+    "generator": false
+  },
+  {
+    "__docId__": 66,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "value",
+    "memberof": "src/metrics/event/GarbageCollectionMetrics.js~GarbageCollectionMetrics",
+    "longname": "src/metrics/event/GarbageCollectionMetrics.js~GarbageCollectionMetrics#value",
+    "access": null,
+    "description": null,
+    "lineNumber": 15,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 67,
+    "kind": "method",
+    "static": false,
+    "variation": null,
+    "name": "getValue",
+    "memberof": "src/metrics/event/GarbageCollectionMetrics.js~GarbageCollectionMetrics",
+    "longname": "src/metrics/event/GarbageCollectionMetrics.js~GarbageCollectionMetrics#getValue",
+    "access": null,
+    "description": null,
+    "lineNumber": 19,
+    "undocument": true,
+    "params": [],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 68,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "value",
+    "memberof": "src/metrics/event/GarbageCollectionMetrics.js~GarbageCollectionMetrics",
+    "longname": "src/metrics/event/GarbageCollectionMetrics.js~GarbageCollectionMetrics#value",
+    "access": null,
+    "description": null,
+    "lineNumber": 21,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 69,
+    "kind": "method",
+    "static": false,
+    "variation": null,
+    "name": "toMetrics",
+    "memberof": "src/metrics/event/GarbageCollectionMetrics.js~GarbageCollectionMetrics",
+    "longname": "src/metrics/event/GarbageCollectionMetrics.js~GarbageCollectionMetrics#toMetrics",
+    "access": null,
+    "description": null,
+    "lineNumber": 25,
+    "undocument": true,
+    "params": [
+      {
+        "name": "stats",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 70,
+    "kind": "method",
+    "static": false,
+    "variation": null,
+    "name": "getGCType",
+    "memberof": "src/metrics/event/GarbageCollectionMetrics.js~GarbageCollectionMetrics",
+    "longname": "src/metrics/event/GarbageCollectionMetrics.js~GarbageCollectionMetrics#getGCType",
+    "access": null,
+    "description": null,
+    "lineNumber": 32,
+    "undocument": true,
+    "params": [
+      {
+        "name": "type",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "string"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 71,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/metrics/event/MemoryLeakMetrics.js",
+    "memberof": null,
+    "longname": "src/metrics/event/MemoryLeakMetrics.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "import memwatch from 'memwatch-next';\nimport heapdump from 'heapdump';\nimport Metrics from '../Metrics';\nimport warning from '../../warning';\n\nexport default class MemoryLeakMetrics extends Metrics {\n  constructor(options = {}) {\n    super();\n    this.name = 'memoryLeak';\n    this.value = {};\n    this.autoDump = options.autoDump || false;\n    this.listen();\n  }\n\n  listen() {\n    memwatch.on('leak', stats => {\n      warning(`Detected Memory Leaks ${stats}`);\n      this.value = stats;\n      if (this.autoDump) {\n        heapdump.writeSnapshot((err, filename) => {\n          if (err) {\n            warning(`Heap Dump Failed ${err}`);\n            return;\n          }\n          warning(`Heap Dump Written To ${filename}`);\n        });\n      }\n    });\n  }\n\n  getValue() {\n    const value = { ...this.value };\n    this.value = {};\n    return value;\n  }\n}\n"
+  },
+  {
+    "__docId__": 72,
+    "kind": "class",
+    "static": true,
+    "variation": null,
+    "name": "MemoryLeakMetrics",
+    "memberof": "src/metrics/event/MemoryLeakMetrics.js",
+    "longname": "src/metrics/event/MemoryLeakMetrics.js~MemoryLeakMetrics",
+    "access": null,
+    "export": true,
+    "importPath": "monyt/src/metrics/event/MemoryLeakMetrics.js",
+    "importStyle": "MemoryLeakMetrics",
+    "description": null,
+    "lineNumber": 6,
+    "undocument": true,
+    "interface": false,
+    "extends": [
+      "src/metrics/Metrics.js~Metrics"
+    ]
+  },
+  {
+    "__docId__": 73,
+    "kind": "constructor",
+    "static": false,
+    "variation": null,
+    "name": "constructor",
+    "memberof": "src/metrics/event/MemoryLeakMetrics.js~MemoryLeakMetrics",
+    "longname": "src/metrics/event/MemoryLeakMetrics.js~MemoryLeakMetrics#constructor",
+    "access": null,
+    "description": null,
+    "lineNumber": 7,
+    "undocument": true,
+    "params": [
+      {
+        "name": "options",
+        "optional": true,
+        "types": [
+          "{}"
+        ],
+        "defaultRaw": {},
+        "defaultValue": "{}"
+      }
+    ],
+    "generator": false
+  },
+  {
+    "__docId__": 74,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "name",
+    "memberof": "src/metrics/event/MemoryLeakMetrics.js~MemoryLeakMetrics",
+    "longname": "src/metrics/event/MemoryLeakMetrics.js~MemoryLeakMetrics#name",
+    "access": null,
+    "description": null,
+    "lineNumber": 9,
+    "undocument": true,
+    "type": {
+      "types": [
+        "string"
+      ]
+    }
+  },
+  {
+    "__docId__": 75,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "value",
+    "memberof": "src/metrics/event/MemoryLeakMetrics.js~MemoryLeakMetrics",
+    "longname": "src/metrics/event/MemoryLeakMetrics.js~MemoryLeakMetrics#value",
+    "access": null,
+    "description": null,
+    "lineNumber": 10,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 76,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "autoDump",
+    "memberof": "src/metrics/event/MemoryLeakMetrics.js~MemoryLeakMetrics",
+    "longname": "src/metrics/event/MemoryLeakMetrics.js~MemoryLeakMetrics#autoDump",
+    "access": null,
+    "description": null,
+    "lineNumber": 11,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 77,
+    "kind": "method",
+    "static": false,
+    "variation": null,
+    "name": "listen",
+    "memberof": "src/metrics/event/MemoryLeakMetrics.js~MemoryLeakMetrics",
+    "longname": "src/metrics/event/MemoryLeakMetrics.js~MemoryLeakMetrics#listen",
+    "access": null,
+    "description": null,
+    "lineNumber": 15,
+    "undocument": true,
+    "params": [],
+    "generator": false
+  },
+  {
+    "__docId__": 78,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "value",
+    "memberof": "src/metrics/event/MemoryLeakMetrics.js~MemoryLeakMetrics",
+    "longname": "src/metrics/event/MemoryLeakMetrics.js~MemoryLeakMetrics#value",
+    "access": null,
+    "description": null,
+    "lineNumber": 18,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 79,
+    "kind": "method",
+    "static": false,
+    "variation": null,
+    "name": "getValue",
+    "memberof": "src/metrics/event/MemoryLeakMetrics.js~MemoryLeakMetrics",
+    "longname": "src/metrics/event/MemoryLeakMetrics.js~MemoryLeakMetrics#getValue",
+    "access": null,
+    "description": null,
+    "lineNumber": 31,
+    "undocument": true,
+    "params": [],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 80,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "value",
+    "memberof": "src/metrics/event/MemoryLeakMetrics.js~MemoryLeakMetrics",
+    "longname": "src/metrics/event/MemoryLeakMetrics.js~MemoryLeakMetrics#value",
+    "access": null,
+    "description": null,
+    "lineNumber": 33,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 81,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/metrics/interval/EventLoopLagMetrics.js",
+    "memberof": null,
+    "longname": "src/metrics/interval/EventLoopLagMetrics.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "import { DEFAULT_INTERVAL } from '../../constants';\nimport eventLoopLag from 'event-loop-lag';\nimport Metrics from '../Metrics';\n\nexport default class EventLoopLagMetrics extends Metrics {\n  constructor(options = {}) {\n    super();\n    this.name = 'eventLoopLag';\n    this.interval = options.interval || DEFAULT_INTERVAL;\n    this.lag = eventLoopLag(this.interval);\n  }\n\n  getValue() {\n    return this.lag();\n  }\n}\n"
+  },
+  {
+    "__docId__": 82,
+    "kind": "class",
+    "static": true,
+    "variation": null,
+    "name": "EventLoopLagMetrics",
+    "memberof": "src/metrics/interval/EventLoopLagMetrics.js",
+    "longname": "src/metrics/interval/EventLoopLagMetrics.js~EventLoopLagMetrics",
+    "access": null,
+    "export": true,
+    "importPath": "monyt/src/metrics/interval/EventLoopLagMetrics.js",
+    "importStyle": "EventLoopLagMetrics",
+    "description": null,
+    "lineNumber": 5,
+    "undocument": true,
+    "interface": false,
+    "extends": [
+      "src/metrics/Metrics.js~Metrics"
+    ]
+  },
+  {
+    "__docId__": 83,
+    "kind": "constructor",
+    "static": false,
+    "variation": null,
+    "name": "constructor",
+    "memberof": "src/metrics/interval/EventLoopLagMetrics.js~EventLoopLagMetrics",
+    "longname": "src/metrics/interval/EventLoopLagMetrics.js~EventLoopLagMetrics#constructor",
+    "access": null,
+    "description": null,
+    "lineNumber": 6,
+    "undocument": true,
+    "params": [
+      {
+        "name": "options",
+        "optional": true,
+        "types": [
+          "{}"
+        ],
+        "defaultRaw": {},
+        "defaultValue": "{}"
+      }
+    ],
+    "generator": false
+  },
+  {
+    "__docId__": 84,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "name",
+    "memberof": "src/metrics/interval/EventLoopLagMetrics.js~EventLoopLagMetrics",
+    "longname": "src/metrics/interval/EventLoopLagMetrics.js~EventLoopLagMetrics#name",
+    "access": null,
+    "description": null,
+    "lineNumber": 8,
+    "undocument": true,
+    "type": {
+      "types": [
+        "string"
+      ]
+    }
+  },
+  {
+    "__docId__": 85,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "interval",
+    "memberof": "src/metrics/interval/EventLoopLagMetrics.js~EventLoopLagMetrics",
+    "longname": "src/metrics/interval/EventLoopLagMetrics.js~EventLoopLagMetrics#interval",
+    "access": null,
+    "description": null,
+    "lineNumber": 9,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 86,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "lag",
+    "memberof": "src/metrics/interval/EventLoopLagMetrics.js~EventLoopLagMetrics",
+    "longname": "src/metrics/interval/EventLoopLagMetrics.js~EventLoopLagMetrics#lag",
+    "access": null,
+    "description": null,
+    "lineNumber": 10,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 87,
+    "kind": "method",
+    "static": false,
+    "variation": null,
+    "name": "getValue",
+    "memberof": "src/metrics/interval/EventLoopLagMetrics.js~EventLoopLagMetrics",
+    "longname": "src/metrics/interval/EventLoopLagMetrics.js~EventLoopLagMetrics#getValue",
+    "access": null,
+    "description": null,
+    "lineNumber": 13,
+    "undocument": true,
+    "params": [],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 88,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/metrics/markable/ErrorCountMetrics.js",
+    "memberof": null,
+    "longname": "src/metrics/markable/ErrorCountMetrics.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "import Measured from 'measured';\nimport MarkableMetrics from './MarkableMetrics';\n\nexport default class ErrorCountMetrics extends MarkableMetrics {\n  constructor() {\n    super(new Measured.Meter());\n    this.name = 'errorCount';\n  }\n\n  getValue() {\n    return this.marker.toJSON().count;\n  }\n}\n"
+  },
+  {
+    "__docId__": 89,
+    "kind": "class",
+    "static": true,
+    "variation": null,
+    "name": "ErrorCountMetrics",
+    "memberof": "src/metrics/markable/ErrorCountMetrics.js",
+    "longname": "src/metrics/markable/ErrorCountMetrics.js~ErrorCountMetrics",
+    "access": null,
+    "export": true,
+    "importPath": "monyt/src/metrics/markable/ErrorCountMetrics.js",
+    "importStyle": "ErrorCountMetrics",
+    "description": null,
+    "lineNumber": 4,
+    "undocument": true,
+    "interface": false,
+    "extends": [
+      "src/metrics/markable/MarkableMetrics.js~MarkableMetrics"
+    ]
+  },
+  {
+    "__docId__": 90,
+    "kind": "constructor",
+    "static": false,
+    "variation": null,
+    "name": "constructor",
+    "memberof": "src/metrics/markable/ErrorCountMetrics.js~ErrorCountMetrics",
+    "longname": "src/metrics/markable/ErrorCountMetrics.js~ErrorCountMetrics#constructor",
+    "access": null,
+    "description": null,
+    "lineNumber": 5,
+    "undocument": true,
+    "params": [],
+    "generator": false
+  },
+  {
+    "__docId__": 91,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "name",
+    "memberof": "src/metrics/markable/ErrorCountMetrics.js~ErrorCountMetrics",
+    "longname": "src/metrics/markable/ErrorCountMetrics.js~ErrorCountMetrics#name",
+    "access": null,
+    "description": null,
+    "lineNumber": 7,
+    "undocument": true,
+    "type": {
+      "types": [
+        "string"
+      ]
+    }
+  },
+  {
+    "__docId__": 92,
+    "kind": "method",
+    "static": false,
+    "variation": null,
+    "name": "getValue",
+    "memberof": "src/metrics/markable/ErrorCountMetrics.js~ErrorCountMetrics",
+    "longname": "src/metrics/markable/ErrorCountMetrics.js~ErrorCountMetrics#getValue",
+    "access": null,
+    "description": null,
+    "lineNumber": 10,
+    "undocument": true,
+    "params": [],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 93,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/metrics/markable/MarkableMetrics.js",
+    "memberof": null,
+    "longname": "src/metrics/markable/MarkableMetrics.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "import Metrics from '../Metrics';\n\nexport default class MarkableMetrics extends Metrics {\n  constructor(marker) {\n    super();\n    if (!marker) {\n      throw new Error('marker is empty. Please check your constructor.');\n    }\n    if (!marker.mark) {\n      throw new Error('Not Implemented: marker.mark()');\n    }\n    this.marker = marker;\n  }\n\n  mark() {\n    this.marker.mark();\n  }\n}\n"
+  },
+  {
+    "__docId__": 94,
+    "kind": "class",
+    "static": true,
+    "variation": null,
+    "name": "MarkableMetrics",
+    "memberof": "src/metrics/markable/MarkableMetrics.js",
+    "longname": "src/metrics/markable/MarkableMetrics.js~MarkableMetrics",
+    "access": null,
+    "export": true,
+    "importPath": "monyt/src/metrics/markable/MarkableMetrics.js",
+    "importStyle": "MarkableMetrics",
+    "description": null,
+    "lineNumber": 3,
+    "undocument": true,
+    "interface": false,
+    "extends": [
+      "src/metrics/Metrics.js~Metrics"
+    ]
+  },
+  {
+    "__docId__": 95,
+    "kind": "constructor",
+    "static": false,
+    "variation": null,
+    "name": "constructor",
+    "memberof": "src/metrics/markable/MarkableMetrics.js~MarkableMetrics",
+    "longname": "src/metrics/markable/MarkableMetrics.js~MarkableMetrics#constructor",
+    "access": null,
+    "description": null,
+    "lineNumber": 4,
+    "undocument": true,
+    "params": [
+      {
+        "name": "marker",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "generator": false
+  },
+  {
+    "__docId__": 96,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "marker",
+    "memberof": "src/metrics/markable/MarkableMetrics.js~MarkableMetrics",
+    "longname": "src/metrics/markable/MarkableMetrics.js~MarkableMetrics#marker",
+    "access": null,
+    "description": null,
+    "lineNumber": 12,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 97,
+    "kind": "method",
+    "static": false,
+    "variation": null,
+    "name": "mark",
+    "memberof": "src/metrics/markable/MarkableMetrics.js~MarkableMetrics",
+    "longname": "src/metrics/markable/MarkableMetrics.js~MarkableMetrics#mark",
+    "access": null,
+    "description": null,
+    "lineNumber": 15,
+    "undocument": true,
+    "params": [],
+    "generator": false
+  },
+  {
+    "__docId__": 98,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/metrics/markable/RequestCountMetrics.js",
+    "memberof": null,
+    "longname": "src/metrics/markable/RequestCountMetrics.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "import Measured from 'measured';\nimport MarkableMetrics from './MarkableMetrics';\n\nexport default class RequestCountMetrics extends MarkableMetrics {\n  constructor() {\n    super(new Measured.Meter());\n    this.name = 'requestCount';\n  }\n\n  getValue() {\n    return this.marker.toJSON().count;\n  }\n}\n"
+  },
+  {
+    "__docId__": 99,
+    "kind": "class",
+    "static": true,
+    "variation": null,
+    "name": "RequestCountMetrics",
+    "memberof": "src/metrics/markable/RequestCountMetrics.js",
+    "longname": "src/metrics/markable/RequestCountMetrics.js~RequestCountMetrics",
+    "access": null,
+    "export": true,
+    "importPath": "monyt/src/metrics/markable/RequestCountMetrics.js",
+    "importStyle": "RequestCountMetrics",
+    "description": null,
+    "lineNumber": 4,
+    "undocument": true,
+    "interface": false,
+    "extends": [
+      "src/metrics/markable/MarkableMetrics.js~MarkableMetrics"
+    ]
+  },
+  {
+    "__docId__": 100,
+    "kind": "constructor",
+    "static": false,
+    "variation": null,
+    "name": "constructor",
+    "memberof": "src/metrics/markable/RequestCountMetrics.js~RequestCountMetrics",
+    "longname": "src/metrics/markable/RequestCountMetrics.js~RequestCountMetrics#constructor",
+    "access": null,
+    "description": null,
+    "lineNumber": 5,
+    "undocument": true,
+    "params": [],
+    "generator": false
+  },
+  {
+    "__docId__": 101,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "name",
+    "memberof": "src/metrics/markable/RequestCountMetrics.js~RequestCountMetrics",
+    "longname": "src/metrics/markable/RequestCountMetrics.js~RequestCountMetrics#name",
+    "access": null,
+    "description": null,
+    "lineNumber": 7,
+    "undocument": true,
+    "type": {
+      "types": [
+        "string"
+      ]
+    }
+  },
+  {
+    "__docId__": 102,
+    "kind": "method",
+    "static": false,
+    "variation": null,
+    "name": "getValue",
+    "memberof": "src/metrics/markable/RequestCountMetrics.js~RequestCountMetrics",
+    "longname": "src/metrics/markable/RequestCountMetrics.js~RequestCountMetrics#getValue",
+    "access": null,
+    "description": null,
+    "lineNumber": 10,
+    "undocument": true,
+    "params": [],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 103,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/sender/GraphiteSender.js",
+    "memberof": null,
+    "longname": "src/sender/GraphiteSender.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "import Sender from './Sender';\nimport graphite from 'graphite';\n\nexport default class GraphiteSender extends Sender {\n  constructor(options = {}) {\n    super();\n    this.client = graphite.createClient(`plaintext://${options.host}:${options.port}/`);\n  }\n\n  send(metrics) {\n    return new Promise((resolve, reject)=> {\n      this.client.write(metrics, error => {\n        if (error) {\n          return reject(error);\n        }\n        return resolve(metrics);\n      });\n    });\n  }\n}\n"
+  },
+  {
+    "__docId__": 104,
+    "kind": "class",
+    "static": true,
+    "variation": null,
+    "name": "GraphiteSender",
+    "memberof": "src/sender/GraphiteSender.js",
+    "longname": "src/sender/GraphiteSender.js~GraphiteSender",
+    "access": null,
+    "export": true,
+    "importPath": "monyt/src/sender/GraphiteSender.js",
+    "importStyle": "GraphiteSender",
+    "description": null,
+    "lineNumber": 4,
+    "undocument": true,
+    "interface": false,
+    "extends": [
+      "src/sender/Sender.js~Sender"
+    ]
+  },
+  {
+    "__docId__": 105,
+    "kind": "constructor",
+    "static": false,
+    "variation": null,
+    "name": "constructor",
+    "memberof": "src/sender/GraphiteSender.js~GraphiteSender",
+    "longname": "src/sender/GraphiteSender.js~GraphiteSender#constructor",
+    "access": null,
+    "description": null,
+    "lineNumber": 5,
+    "undocument": true,
+    "params": [
+      {
+        "name": "options",
+        "optional": true,
+        "types": [
+          "{}"
+        ],
+        "defaultRaw": {},
+        "defaultValue": "{}"
+      }
+    ],
+    "generator": false
+  },
+  {
+    "__docId__": 106,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "client",
+    "memberof": "src/sender/GraphiteSender.js~GraphiteSender",
+    "longname": "src/sender/GraphiteSender.js~GraphiteSender#client",
+    "access": null,
+    "description": null,
+    "lineNumber": 7,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 107,
+    "kind": "method",
+    "static": false,
+    "variation": null,
+    "name": "send",
+    "memberof": "src/sender/GraphiteSender.js~GraphiteSender",
+    "longname": "src/sender/GraphiteSender.js~GraphiteSender#send",
+    "access": null,
+    "description": null,
+    "lineNumber": 10,
+    "undocument": true,
+    "params": [
+      {
+        "name": "metrics",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 108,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/sender/ProcessSender.js",
+    "memberof": null,
+    "longname": "src/sender/ProcessSender.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "import Sender from './Sender';\nimport warning from '../warning';\n\nexport default class ProcessSender extends Sender {\n  constructor(options = {}) {\n    super();\n    if (!process.send) {\n      warning('Process Sender only can work in clusters mode. This Process Sender will not send metricses.');\n      process.send = () => {\n      };\n    }\n    this.sendClient(options.host, options.port);\n  }\n\n  sendClient(host, port) {\n    if (!host || !port) {\n      return Promise.resolve();\n    }\n    return new Promise((resolve, reject) => {\n      try {\n        process.send({ client: { host, port } });\n        return resolve({ host, port });\n      } catch (error) {\n        return reject(error);\n      }\n    });\n  }\n\n  send(metrics) {\n    return new Promise((resolve, reject) => {\n      try {\n        process.send({ metrics });\n        return resolve(metrics);\n      } catch (error) {\n        return reject(error);\n      }\n    });\n  }\n}\n"
+  },
+  {
+    "__docId__": 109,
+    "kind": "class",
+    "static": true,
+    "variation": null,
+    "name": "ProcessSender",
+    "memberof": "src/sender/ProcessSender.js",
+    "longname": "src/sender/ProcessSender.js~ProcessSender",
+    "access": null,
+    "export": true,
+    "importPath": "monyt/src/sender/ProcessSender.js",
+    "importStyle": "ProcessSender",
+    "description": null,
+    "lineNumber": 4,
+    "undocument": true,
+    "interface": false,
+    "extends": [
+      "src/sender/Sender.js~Sender"
+    ]
+  },
+  {
+    "__docId__": 110,
+    "kind": "constructor",
+    "static": false,
+    "variation": null,
+    "name": "constructor",
+    "memberof": "src/sender/ProcessSender.js~ProcessSender",
+    "longname": "src/sender/ProcessSender.js~ProcessSender#constructor",
+    "access": null,
+    "description": null,
+    "lineNumber": 5,
+    "undocument": true,
+    "params": [
+      {
+        "name": "options",
+        "optional": true,
+        "types": [
+          "{}"
+        ],
+        "defaultRaw": {},
+        "defaultValue": "{}"
+      }
+    ],
+    "generator": false
+  },
+  {
+    "__docId__": 111,
+    "kind": "method",
+    "static": false,
+    "variation": null,
+    "name": "sendClient",
+    "memberof": "src/sender/ProcessSender.js~ProcessSender",
+    "longname": "src/sender/ProcessSender.js~ProcessSender#sendClient",
+    "access": null,
+    "description": null,
+    "lineNumber": 15,
+    "undocument": true,
+    "params": [
+      {
+        "name": "host",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "port",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 112,
+    "kind": "method",
+    "static": false,
+    "variation": null,
+    "name": "send",
+    "memberof": "src/sender/ProcessSender.js~ProcessSender",
+    "longname": "src/sender/ProcessSender.js~ProcessSender#send",
+    "access": null,
+    "description": null,
+    "lineNumber": 29,
+    "undocument": true,
+    "params": [
+      {
+        "name": "metrics",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 113,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/sender/Sender.js",
+    "memberof": null,
+    "longname": "src/sender/Sender.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "export default class Sender {\n  constructor() {\n    if (!this.send) {\n      throw new Error('Not implemented: send()');\n    }\n  }\n}\n"
+  },
+  {
+    "__docId__": 114,
+    "kind": "class",
+    "static": true,
+    "variation": null,
+    "name": "Sender",
+    "memberof": "src/sender/Sender.js",
+    "longname": "src/sender/Sender.js~Sender",
+    "access": null,
+    "export": true,
+    "importPath": "monyt/src/sender/Sender.js",
+    "importStyle": "Sender",
+    "description": null,
+    "lineNumber": 1,
+    "undocument": true,
+    "interface": false
+  },
+  {
+    "__docId__": 115,
+    "kind": "constructor",
+    "static": false,
+    "variation": null,
+    "name": "constructor",
+    "memberof": "src/sender/Sender.js~Sender",
+    "longname": "src/sender/Sender.js~Sender#constructor",
+    "access": null,
+    "description": null,
+    "lineNumber": 2,
+    "undocument": true,
+    "params": [],
+    "generator": false
+  },
+  {
+    "__docId__": 116,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/warning.js",
+    "memberof": null,
+    "longname": "src/warning.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "/**\n * Prints a warning in the console if it exists.\n *\n * @param {String} message The warning message.\n * @returns {void}\n */\nexport default function warning(message) {\n  /* eslint-disable no-console */\n  if (typeof console !== 'undefined' && typeof console.error === 'function') {\n    console.error(message);\n  }\n  /* eslint-enable no-console */\n}\n"
+  },
+  {
+    "__docId__": 117,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "warning",
+    "memberof": "src/warning.js",
+    "longname": "src/warning.js~warning",
+    "access": null,
+    "export": true,
+    "importPath": "monyt/src/warning.js",
+    "importStyle": "warning",
+    "description": "Prints a warning in the console if it exists.",
+    "lineNumber": 7,
+    "unknown": [
+      {
+        "tagName": "@returns",
+        "tagValue": "{void}"
+      }
+    ],
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "String"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "message",
+        "description": "The warning message."
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "void"
+      ],
+      "spread": false,
+      "description": ""
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 119,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Infinity",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Infinity",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Infinity",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 120,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "NaN",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NaN",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~NaN",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 121,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "undefined",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~undefined",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 122,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "null",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/null",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~null",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 123,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Object",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Object",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 124,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "object",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~object",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 125,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Function",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Function",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 126,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "function",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~function",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 127,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Boolean",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Boolean",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 128,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "boolean",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~boolean",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 129,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Symbol",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Symbol",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 130,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Error",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Error",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 131,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "EvalError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/EvalError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~EvalError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 132,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "InternalError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/InternalError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~InternalError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 133,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "RangeError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RangeError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~RangeError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 134,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "ReferenceError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ReferenceError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~ReferenceError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 135,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "SyntaxError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SyntaxError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~SyntaxError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 136,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "TypeError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypeError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~TypeError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 137,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "URIError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/URIError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~URIError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 138,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Number",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Number",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 139,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "number",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~number",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 140,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Date",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Date",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 141,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "String",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~String",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 142,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "string",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~string",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 143,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "RegExp",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~RegExp",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 144,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 145,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Int8Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int8Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Int8Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 146,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Uint8Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Uint8Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 147,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Uint8ClampedArray",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8ClampedArray",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Uint8ClampedArray",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 148,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Int16Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int16Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Int16Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 149,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Uint16Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint16Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Uint16Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 150,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Int32Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Int32Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 151,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Uint32Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint32Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Uint32Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 152,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Float32Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Float32Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 153,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Float64Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Float64Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 154,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Map",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Map",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 155,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Set",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Set",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 156,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "WeakMap",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~WeakMap",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 157,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "WeakSet",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakSet",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~WeakSet",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 158,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "ArrayBuffer",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~ArrayBuffer",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 159,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "DataView",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DataView",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~DataView",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 160,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "JSON",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~JSON",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 161,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Promise",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Promise",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 162,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Generator",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Generator",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Generator",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 163,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "GeneratorFunction",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/GeneratorFunction",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~GeneratorFunction",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 164,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Reflect",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Reflect",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Reflect",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 165,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Proxy",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Proxy",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 167,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "CanvasRenderingContext2D",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "longname": "BuiltinExternal/WebAPIExternal.js~CanvasRenderingContext2D",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 168,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "DocumentFragment",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/DocumentFragment",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "longname": "BuiltinExternal/WebAPIExternal.js~DocumentFragment",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 169,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Element",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/Element",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "longname": "BuiltinExternal/WebAPIExternal.js~Element",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 170,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Event",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/Event",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "longname": "BuiltinExternal/WebAPIExternal.js~Event",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 171,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Node",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/Node",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "longname": "BuiltinExternal/WebAPIExternal.js~Node",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 172,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "NodeList",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/NodeList",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "longname": "BuiltinExternal/WebAPIExternal.js~NodeList",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 173,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "XMLHttpRequest",
+    "externalLink": "https://developer.mozilla.org/en/docs/Web/API/XMLHttpRequest",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "longname": "BuiltinExternal/WebAPIExternal.js~XMLHttpRequest",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 174,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "AudioContext",
+    "externalLink": "https://developer.mozilla.org/en/docs/Web/API/AudioContext",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "longname": "BuiltinExternal/WebAPIExternal.js~AudioContext",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  }
+]

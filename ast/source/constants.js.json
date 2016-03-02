@@ -1,0 +1,138 @@
+{
+  "type": "Program",
+  "start": 0,
+  "end": 43,
+  "loc": {
+    "start": {
+      "line": 1,
+      "column": 0
+    },
+    "end": {
+      "line": 2,
+      "column": 0
+    }
+  },
+  "sourceType": "module",
+  "body": [
+    {
+      "type": "ExportNamedDeclaration",
+      "start": 0,
+      "end": 42,
+      "loc": {
+        "start": {
+          "line": 1,
+          "column": 0
+        },
+        "end": {
+          "line": 1,
+          "column": 42
+        }
+      },
+      "declaration": {
+        "type": "VariableDeclaration",
+        "start": 7,
+        "end": 42,
+        "loc": {
+          "start": {
+            "line": 1,
+            "column": 7
+          },
+          "end": {
+            "line": 1,
+            "column": 42
+          }
+        },
+        "declarations": [
+          {
+            "type": "VariableDeclarator",
+            "start": 13,
+            "end": 41,
+            "loc": {
+              "start": {
+                "line": 1,
+                "column": 13
+              },
+              "end": {
+                "line": 1,
+                "column": 41
+              }
+            },
+            "id": {
+              "type": "Identifier",
+              "start": 13,
+              "end": 29,
+              "loc": {
+                "start": {
+                  "line": 1,
+                  "column": 13
+                },
+                "end": {
+                  "line": 1,
+                  "column": 29
+                }
+              },
+              "name": "DEFAULT_INTERVAL"
+            },
+            "init": {
+              "type": "BinaryExpression",
+              "start": 32,
+              "end": 41,
+              "loc": {
+                "start": {
+                  "line": 1,
+                  "column": 32
+                },
+                "end": {
+                  "line": 1,
+                  "column": 41
+                }
+              },
+              "left": {
+                "type": "Literal",
+                "start": 32,
+                "end": 34,
+                "loc": {
+                  "start": {
+                    "line": 1,
+                    "column": 32
+                  },
+                  "end": {
+                    "line": 1,
+                    "column": 34
+                  }
+                },
+                "value": 30,
+                "rawValue": 30,
+                "raw": "30"
+              },
+              "operator": "*",
+              "right": {
+                "type": "Literal",
+                "start": 37,
+                "end": 41,
+                "loc": {
+                  "start": {
+                    "line": 1,
+                    "column": 37
+                  },
+                  "end": {
+                    "line": 1,
+                    "column": 41
+                  }
+                },
+                "value": 1000,
+                "rawValue": 1000,
+                "raw": "1000"
+              }
+            }
+          }
+        ],
+        "kind": "const",
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "specifiers": [],
+      "source": null
+    }
+  ]
+}

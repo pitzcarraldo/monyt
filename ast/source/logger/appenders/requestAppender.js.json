@@ -1,0 +1,316 @@
+{
+  "type": "Program",
+  "start": 0,
+  "end": 159,
+  "loc": {
+    "start": {
+      "line": 1,
+      "column": 0
+    },
+    "end": {
+      "line": 9,
+      "column": 0
+    }
+  },
+  "sourceType": "module",
+  "body": [
+    {
+      "type": "ExportDefaultDeclaration",
+      "start": 0,
+      "end": 158,
+      "loc": {
+        "start": {
+          "line": 1,
+          "column": 0
+        },
+        "end": {
+          "line": 8,
+          "column": 2
+        }
+      },
+      "declaration": {
+        "type": "ObjectExpression",
+        "start": 15,
+        "end": 157,
+        "loc": {
+          "start": {
+            "line": 1,
+            "column": 15
+          },
+          "end": {
+            "line": 8,
+            "column": 1
+          }
+        },
+        "properties": [
+          {
+            "type": "Property",
+            "start": 19,
+            "end": 34,
+            "loc": {
+              "start": {
+                "line": 2,
+                "column": 2
+              },
+              "end": {
+                "line": 2,
+                "column": 17
+              }
+            },
+            "method": false,
+            "shorthand": false,
+            "computed": false,
+            "key": {
+              "type": "Identifier",
+              "start": 19,
+              "end": 23,
+              "loc": {
+                "start": {
+                  "line": 2,
+                  "column": 2
+                },
+                "end": {
+                  "line": 2,
+                  "column": 6
+                }
+              },
+              "name": "type"
+            },
+            "value": {
+              "type": "Literal",
+              "start": 25,
+              "end": 34,
+              "loc": {
+                "start": {
+                  "line": 2,
+                  "column": 8
+                },
+                "end": {
+                  "line": 2,
+                  "column": 17
+                }
+              },
+              "value": "console",
+              "rawValue": "console",
+              "raw": "'console'"
+            },
+            "kind": "init"
+          },
+          {
+            "type": "Property",
+            "start": 38,
+            "end": 57,
+            "loc": {
+              "start": {
+                "line": 3,
+                "column": 2
+              },
+              "end": {
+                "line": 3,
+                "column": 21
+              }
+            },
+            "method": false,
+            "shorthand": false,
+            "computed": false,
+            "key": {
+              "type": "Identifier",
+              "start": 38,
+              "end": 46,
+              "loc": {
+                "start": {
+                  "line": 3,
+                  "column": 2
+                },
+                "end": {
+                  "line": 3,
+                  "column": 10
+                }
+              },
+              "name": "category"
+            },
+            "value": {
+              "type": "Literal",
+              "start": 48,
+              "end": 57,
+              "loc": {
+                "start": {
+                  "line": 3,
+                  "column": 12
+                },
+                "end": {
+                  "line": 3,
+                  "column": 21
+                }
+              },
+              "value": "request",
+              "rawValue": "request",
+              "raw": "'request'"
+            },
+            "kind": "init"
+          },
+          {
+            "type": "Property",
+            "start": 61,
+            "end": 155,
+            "loc": {
+              "start": {
+                "line": 4,
+                "column": 2
+              },
+              "end": {
+                "line": 7,
+                "column": 3
+              }
+            },
+            "method": false,
+            "shorthand": false,
+            "computed": false,
+            "key": {
+              "type": "Identifier",
+              "start": 61,
+              "end": 67,
+              "loc": {
+                "start": {
+                  "line": 4,
+                  "column": 2
+                },
+                "end": {
+                  "line": 4,
+                  "column": 8
+                }
+              },
+              "name": "layout"
+            },
+            "value": {
+              "type": "ObjectExpression",
+              "start": 69,
+              "end": 155,
+              "loc": {
+                "start": {
+                  "line": 4,
+                  "column": 10
+                },
+                "end": {
+                  "line": 7,
+                  "column": 3
+                }
+              },
+              "properties": [
+                {
+                  "type": "Property",
+                  "start": 75,
+                  "end": 90,
+                  "loc": {
+                    "start": {
+                      "line": 5,
+                      "column": 4
+                    },
+                    "end": {
+                      "line": 5,
+                      "column": 19
+                    }
+                  },
+                  "method": false,
+                  "shorthand": false,
+                  "computed": false,
+                  "key": {
+                    "type": "Identifier",
+                    "start": 75,
+                    "end": 79,
+                    "loc": {
+                      "start": {
+                        "line": 5,
+                        "column": 4
+                      },
+                      "end": {
+                        "line": 5,
+                        "column": 8
+                      }
+                    },
+                    "name": "type"
+                  },
+                  "value": {
+                    "type": "Literal",
+                    "start": 81,
+                    "end": 90,
+                    "loc": {
+                      "start": {
+                        "line": 5,
+                        "column": 10
+                      },
+                      "end": {
+                        "line": 5,
+                        "column": 19
+                      }
+                    },
+                    "value": "pattern",
+                    "rawValue": "pattern",
+                    "raw": "'pattern'"
+                  },
+                  "kind": "init"
+                },
+                {
+                  "type": "Property",
+                  "start": 96,
+                  "end": 151,
+                  "loc": {
+                    "start": {
+                      "line": 6,
+                      "column": 4
+                    },
+                    "end": {
+                      "line": 6,
+                      "column": 59
+                    }
+                  },
+                  "method": false,
+                  "shorthand": false,
+                  "computed": false,
+                  "key": {
+                    "type": "Identifier",
+                    "start": 96,
+                    "end": 103,
+                    "loc": {
+                      "start": {
+                        "line": 6,
+                        "column": 4
+                      },
+                      "end": {
+                        "line": 6,
+                        "column": 11
+                      }
+                    },
+                    "name": "pattern"
+                  },
+                  "value": {
+                    "type": "Literal",
+                    "start": 105,
+                    "end": 151,
+                    "loc": {
+                      "start": {
+                        "line": 6,
+                        "column": 13
+                      },
+                      "end": {
+                        "line": 6,
+                        "column": 59
+                      }
+                    },
+                    "value": "%-5p %d{yyyy-MM-dd hh:mm:ss} [process-%y] %m",
+                    "rawValue": "%-5p %d{yyyy-MM-dd hh:mm:ss} [process-%y] %m",
+                    "raw": "'%-5p %d{yyyy-MM-dd hh:mm:ss} [process-%y] %m'"
+                  },
+                  "kind": "init"
+                }
+              ]
+            },
+            "kind": "init"
+          }
+        ],
+        "leadingComments": [],
+        "trailingComments": []
+      }
+    }
+  ]
+}
