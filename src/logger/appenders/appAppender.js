@@ -6,7 +6,7 @@ export default {
   category: 'app',
   layout: {
     type: 'pattern',
-    pattern: '%-5p %d{yyyy-MM-dd hh:mm:ss} [process-%y] %x{line} - %m',
+    pattern: '%-5p %d{yyyy-MM-dd hh:mm:ss} [process-%y]%x{line} - %m',
     tokens: {
       line: function () {
         return (new Error)
