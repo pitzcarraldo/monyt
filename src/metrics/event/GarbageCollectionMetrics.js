@@ -1,43 +1,35 @@
-import gc from 'gc-stats';
+import profiler from 'gc-profiler';
 import Metrics from '../Metrics';
+
+const DEFAULT_VALUE = {
+  minor: 0,
+  major: 0
+};
 
 export default class GarbageCollectionMetrics extends Metrics {
   constructor() {
     super();
-    this.gc = (gc)();
     this.name = 'gc';
-    this.value = {};
+    this.value = DEFAULT_VALUE;
     this.listen();
   }
 
   listen() {
-    this.gc.on('stats', stats => {
-      this.value = (this.toMetrics(stats));
+    profiler.on('gc', info => {
+      this.value = this.toMetrics(info);
     });
   }
 
   getValue() {
     const value = { ...this.value };
-    this.value = {};
+    this.value = DEFAULT_VALUE;
     return value;
   }
 
-  toMetrics(stats) {
-    const metrics = {};
-    const gcType = this.getGCType(stats.gctype);
-    metrics[gcType] = stats.pauseMS;
-    return metrics;
-  }
-
-  getGCType(type) {
-    switch (type) {
-      case 1 :
-        return 'minor';
-      case 2 :
-      case 3 :
-        return 'major';
-      default :
-        return '';
-    }
+  toMetrics(info) {
+    return {
+      minor: info.type === 'Scavenge' ? info.duration : 0,
+      major: info.type === 'MarkSweepCompact' ? info.duration : 0
+    };
   }
 }
