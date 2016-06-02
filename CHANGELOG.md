@@ -1,3 +1,8 @@
+## 0.3.0
+
+* Changed GC Metric Collector to GC Profiler from GC Stats
+* Changed default value of GC to zero from undefined.
+
 ## 0.2.0
 
 * Added ProcessSender
